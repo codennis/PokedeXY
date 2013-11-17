@@ -1,0 +1,8 @@
+BEGIN TRANSACTION;
+CREATE TABLE Pokedex (_id INTEGER PRIMARY KEY, Name TEXT);
+INSERT INTO Pokedex VALUES(1,'Bulbasaur');
+INSERT INTO Pokedex VALUES(2,'Ivysaur');
+INSERT INTO Pokedex VALUES(3,'Venasaur');
+CREATE TABLE "android_metadata" ("locale" TEXT DEFAULT 'en_US');
+INSERT INTO android_metadata VALUES('en_US');
+COMMIT;
