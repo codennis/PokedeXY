@@ -26,28 +26,38 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		
+		DBHelper dbh = new DBHelper(this, "test");
+		newDB = dbh.openDatabase();
+		storeData();
 		// Stuff with database
-
+		
+		/*
 		pokedex.add(new Pokemon(1,0,0,0,"Test",""));
 		pokedex.add(new Pokemon(2,0,0,0,"Test2",""));
 		pokedex.add(new Pokemon(3,0,0,0,"Test3",""));
 		pokedex.add(new Pokemon(4,0,0,0,"TestA",""));
 		pokedex.add(new Pokemon(5,0,0,0,"TestB",""));
-		
+		*/
 		displayList();
 		
 	}
 
+	private void storeData() {
+		Cursor c = newDB.query("pokedex", new String[] {"_id", "name"}, null, null, null, null, null);
+		c.moveToFirst();
+		if (!c.isAfterLast()) {
+			do {
+				Log.i("storing", c.getInt(0) + c.getString(1));
+				pokedex.add(new Pokemon(c.getInt(0),0,0,0,c.getString(1),""));
+			} while (c.moveToNext());
+		}
+		c.close();
+	}
+	
 	private void displayList() {
 		final ListView pokedexList = (ListView) findViewById(R.id.nationalDex);
 		pokedexList.setAdapter(new PokedexAdapter(this, pokedex));
-		
-		pokedexList.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-				Object o = pokedexList.getItemAtPosition(position);
-			}
-		});
 	}
 	
 	@Override

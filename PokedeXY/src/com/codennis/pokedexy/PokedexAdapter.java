@@ -47,8 +47,9 @@ public class PokedexAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
+		// Fix hacky string
+		holder.txtNumber.setText("" + pokedex.get(position).getNID());
 		holder.txtName.setText(pokedex.get(position).getName());
-		holder.txtNumber.setText(pokedex.get(position).getName());
 		
 		return convertView;
 	}
