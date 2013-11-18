@@ -1,22 +1,27 @@
 package com.codennis.pokedexy;
 
-public class Pokemon {
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class Pokemon implements Parcelable {
 	private int nID, ceID, coID, mtID;
 	private String name, locations;
-	private boolean caught;
+	private int caught;
 	
 	public Pokemon() {
 		super();
 	}
 	
-	public Pokemon(int nID, int ceID, int coID, int mtID, String name, String locations) {
+	public Pokemon(int nID, int ceID, int coID, int mtID, String name, String locations, int caught) {
 		this.nID = nID;
 		this.ceID = ceID;
 		this.coID = coID;
 		this.mtID = mtID;
 		this.name = name;
 		this.locations = locations;
-		caught = false;
+		this.caught = caught;
 	}
 	
 	@Override
@@ -40,8 +45,89 @@ public class Pokemon {
 	public String getName() {
 		return name;
 	}
-	
-	public void setCaught(boolean caught) {
-		this.caught = caught;
+	public String getLocation() {
+		return locations;
 	}
+	public void setCaught(boolean caught) {
+		this.caught = caught ? 1 : 0;
+	}
+	public boolean getCaught() {
+		return (caught == 1 ? true : false);
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel out, int flags) {
+		// TODO Auto-generated method stub		
+		out.writeInt(nID);		
+		out.writeInt(ceID);		
+		out.writeInt(coID);		
+		out.writeInt(mtID);
+
+		out.writeString(name);
+		out.writeString(locations);
+		
+		out.writeInt(caught);
+	}
+	
+	public static final Parcelable.Creator<Pokemon> CREATOR = new Parcelable.Creator<Pokemon>() {
+		public Pokemon createFromParcel(Parcel in) {
+			return new Pokemon(in);
+		}
+		public Pokemon[] newArray(int size) {
+			return new Pokemon[size];
+		}
+	};
+	
+	
+	private Pokemon(Parcel in) {
+		this.nID = in.readInt();
+		this.ceID = in.readInt();
+		this.coID = in.readInt();
+		this.mtID = in.readInt();
+		
+		this.name = in.readString();
+		this.locations = in.readString();
+		
+		this.caught = in.readInt();
+	}
+	
+}
+
+
+class ViewHolder {
+    protected TextView text;
+    protected ImageView icon;
+    protected int position;
+    protected Pokemon pokemon;
+    private int color;
+    private int imageid;
+    boolean caught;
+	TextView txtName;
+	TextView txtNumber;
+	
+    public ViewHolder(Pokemon poke)
+    {
+    	pokemon = poke;
+    }
+    
+    public int getColor() {
+    	if (pokemon.getCaught())
+    		return 0xFF00FF00;
+    	else
+    		return 0xFFFF0000;
+    }
+    
+    public int getImageId() {
+        return imageid;
+    }
+    
+    public void setCaught(boolean caught) {
+    	pokemon.setCaught(caught);
+    }
 }

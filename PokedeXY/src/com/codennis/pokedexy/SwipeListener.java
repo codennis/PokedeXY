@@ -1,5 +1,9 @@
 package com.codennis.pokedexy;
 
+import android.content.Context;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -7,95 +11,102 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
-public class SwipeListener implements OnTouchListener {
-    private int padding = 0;
-    private int initialx = 0;
-    private int currentx = 0;
-    private  ViewHolder viewHolder;
+public class SwipeListener extends SimpleOnGestureListener implements OnTouchListener {
+    private ViewHolder viewHolder;
+    private Context context;
+    private GestureDetector gDetector;
+    private SQLiteDatabase newDB;
     
-	@SuppressWarnings("deprecation")
-	private final GestureDetector gestDetector = new GestureDetector(new GestureListener());
-	
-	public boolean onTouch(final View v, MotionEvent event) {
-        Log.i("LISTENER", "TOUCHED");
-		if ( event.getAction() == MotionEvent.ACTION_DOWN)
-	    {
-	        padding = 0;
-	        initialx = (int) event.getX();
-	        currentx = (int) event.getX();
-	        viewHolder = ((ViewHolder) v.getTag());
-	    }
-	    if ( event.getAction() == MotionEvent.ACTION_MOVE)
-	    {
-	        currentx = (int) event.getX();
-	        padding = currentx - initialx;
-	    }
-	    
-	    if ( event.getAction() == MotionEvent.ACTION_UP || 
-	         event.getAction() == MotionEvent.ACTION_CANCEL)
-	    {
-	        padding = 0;
-	        initialx = 0;
-	        currentx = 0;
-	    }
-	    
-	    if(viewHolder != null)
-	    {
-	        if(padding == 0)
-	        {
-	            v.setBackgroundColor(0xFF000000 );  
-	        }
-	        if(padding > 75)
-	        {
-	            viewHolder.setCaught(true);
-	            Log.i("LISTENER", "CAUGHT");
-	        }
-	        if(padding < -75)
-	        {
-	            viewHolder.setCaught(false);
-	            Log.i("LISTENER", "UNCAUGHT");
-	        }
-	        v.setBackgroundColor(viewHolder.getColor());
-	        v.setPadding(padding, 0,0, 0);
-	    }
-	    return true;
-	}
-	//	return gestDetector.onTouchEvent(me);
-	//}
-	
-	private final class GestureListener extends SimpleOnGestureListener {
-		private static final int SWIPE_MIN_DISTANCE = 120;
-		private static final int SWIPE_MAX_OFF_PATH = 250;
-		private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-	
-		@Override
-		public boolean onDown(MotionEvent e) {
-			return true;
-		}
-		
-		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-			boolean result = false;
-			
-			try {
-				float diffX = e2.getX() - e1.getX();
-				if (Math.abs(diffX) > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-					if (diffX > 0) {
-						onSwipeRight();
-					} else {
-						onSwipeLeft();
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			return result;
-		}
-	}
+    static final int SWIPE_MIN_DISTANCE = 80;
+    static final int SWIPE_MAX_OFF_PATH = 250;
+    static final int SWIPE_THRESHOLD_VELOCITY = 2000;
 
-	public void onSwipeRight() {}
-    public void onSwipeLeft() {}
+    private Pokemon poke = null;
+    
+    public SwipeListener() {
+     super();
+    }
+   
+    public SwipeListener(Context context) {
+    	this(context, null);
+    	DBHelper dbh = DBHelper.getInstance(context);
+		newDB = dbh.openDatabase();
+    }
+   
+    public SwipeListener(Context context, GestureDetector gDetector) {
+   
+     if (gDetector == null)
+    	 gDetector = new GestureDetector(context, this);
+   
+     this.context = context;
+     this.gDetector = gDetector;
+    }
+    
+    public void setPoke(Pokemon poke) {
+    	this.poke = poke;
+    }
+    
+    @Override
+    public boolean onSingleTapUp(MotionEvent event) {
+    	Log.i("LISTENER", "TAPPED" + poke.getName() + " " + poke.getLocation());
+    	Intent i = new Intent(context, PokemonActivity.class);
+    	Bundle b = new Bundle();
+    	b.putParcelable("TEST", this.poke);
+    	i.putExtras(b);
+    	context.startActivity(i);
+    	return super.onSingleTapUp(event);
+    }
+
+	public boolean onDown(MotionEvent e) {
+		return true;
+	}
+	
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float vX, float vY) {
+    	Log.i("LISTENER", "FLING " + vX + " " + vY);
+    	
+    	if (Math.abs(vX) < SWIPE_THRESHOLD_VELOCITY)
+    	{
+    		Log.i("LISTENER", "TOO SLOW");
+    		return false;
+    	}
+    	if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE) {
+	        viewHolder.setCaught(false);
+	        Log.i("LISTENER", "UNCAUGHT");
+    	}
+    	else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE) {
+            viewHolder.setCaught(true);
+	        Log.i("LISTENER", "CAUGHT");
+    	}
+        
+    	return super.onFling(e1,e2,vX,vY);
+    }
+
+	public boolean onTouch(final View v, MotionEvent event) {
+		boolean bool;
+        viewHolder = ((ViewHolder) v.getTag());
+        bool = gDetector.onTouchEvent(event);
+        v.setBackgroundColor(viewHolder.getColor());
+        /*
+        if (bool) {
+	        final Animation anim = AnimationUtils.loadAnimation(context,android.R.anim.slide_out_right);
+	        v.startAnimation(anim);
+	        Handler handle = new Handler();
+	        handle.postDelayed(new Runnable() {
+	        	@Override
+	        	public void run() {
+
+	        	}
+	        },2000);
+        }
+        */
+        return true;
+	}
+	
+	
+	public GestureDetector getDetector() {
+		return gDetector;
+	}
 
 }
 

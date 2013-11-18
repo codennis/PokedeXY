@@ -8,14 +8,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
     
-    <TextView android:id="@+id/heading"
-        android:text="Pokedex"
+    <TextView
+        android:id="@+id/heading"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Pokedex"
+        android:textSize="24sp" />
 
     <ListView
         android:id="@+id/nationalDex"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_width="fill_parent" />
+        android:layout_below="@+id/heading" />
     
 </RelativeLayout>

@@ -3,18 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-	android:padding="8dp" >
+	android:padding="12dp" 
+	android:clickable="true" >
 	
     <TextView
-        android:id="@+id/number"
+        android:id="@+id/row_number"
         android:layout_width="50dp"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:text="TextView" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/row_name"
         android:layout_width="100dp"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:text="TextView" />
 
 </LinearLayout>

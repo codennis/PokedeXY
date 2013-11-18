@@ -12,9 +12,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
+	private static DBHelper sInstance = null;
 	
 	private static String DB_PATH;
-	private static String DB_NAME;
+	private static String DB_NAME = "test";
 	private SQLiteDatabase database;
 	public final Context context;
 	
@@ -22,13 +23,19 @@ public class DBHelper extends SQLiteOpenHelper {
 		return database;
 	}
 	
-	public DBHelper(Context context, String dbName) {
-		super(context, dbName,null,1);
+	public static DBHelper getInstance(Context context) {
+		if (sInstance == null) {
+			sInstance = new DBHelper(context.getApplicationContext());
+		}
+		return sInstance;
+	}
+	
+	private DBHelper(Context context) {
+		super(context, DB_NAME ,null,1);
 		this.context = context;
 		
 		String packageName = context.getPackageName();
 		DB_PATH = String.format("/data/data/%s/databases/",packageName);
-		DB_NAME = dbName;
 		openDatabase();
 	}
 	
