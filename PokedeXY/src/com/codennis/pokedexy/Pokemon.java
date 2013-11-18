@@ -3,6 +3,7 @@ package com.codennis.pokedexy;
 public class Pokemon {
 	private int nID, ceID, coID, mtID;
 	private String name, locations;
+	private boolean caught;
 	
 	public Pokemon() {
 		super();
@@ -15,6 +16,7 @@ public class Pokemon {
 		this.mtID = mtID;
 		this.name = name;
 		this.locations = locations;
+		caught = false;
 	}
 	
 	@Override
@@ -37,5 +39,9 @@ public class Pokemon {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public void setCaught(boolean caught) {
+		this.caught = caught;
 	}
 }

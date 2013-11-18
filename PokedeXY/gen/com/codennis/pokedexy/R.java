@@ -21,13 +21,15 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int custom_selector=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int action_settings=0x7f080003;
-        public static final int name=0x7f080002;
-        public static final int nationalDex=0x7f080000;
-        public static final int number=0x7f080001;
+        public static final int action_settings=0x7f080004;
+        public static final int heading=0x7f080000;
+        public static final int name=0x7f080003;
+        public static final int nationalDex=0x7f080001;
+        public static final int number=0x7f080002;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
