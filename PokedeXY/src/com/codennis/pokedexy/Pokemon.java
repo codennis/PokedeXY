@@ -105,7 +105,6 @@ class ViewHolder {
     protected ImageView icon;
     protected int position;
     protected Pokemon pokemon;
-    private int color;
     private int imageid;
     boolean caught;
 	TextView txtName;
@@ -114,13 +113,6 @@ class ViewHolder {
     public ViewHolder(Pokemon poke)
     {
     	pokemon = poke;
-    }
-    
-    public int getColor() {
-    	if (pokemon.getCaught())
-    		return 0xFF00FF00;
-    	else
-    		return 0xFFFF0000;
     }
     
     public int getImageId() {

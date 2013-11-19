@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
-public class SwipeListener extends SimpleOnGestureListener implements OnTouchListener {
+public abstract class SwipeListener extends SimpleOnGestureListener implements OnTouchListener {
     private ViewHolder viewHolder;
     private Context context;
     private GestureDetector gDetector;
@@ -26,7 +26,7 @@ public class SwipeListener extends SimpleOnGestureListener implements OnTouchLis
     public SwipeListener() {
      super();
     }
-   
+   /*
     public SwipeListener(Context context) {
     	this(context, null);
     	DBHelper dbh = DBHelper.getInstance(context);
@@ -86,27 +86,13 @@ public class SwipeListener extends SimpleOnGestureListener implements OnTouchLis
 		boolean bool;
         viewHolder = ((ViewHolder) v.getTag());
         bool = gDetector.onTouchEvent(event);
-        v.setBackgroundColor(viewHolder.getColor());
-        /*
-        if (bool) {
-	        final Animation anim = AnimationUtils.loadAnimation(context,android.R.anim.slide_out_right);
-	        v.startAnimation(anim);
-	        Handler handle = new Handler();
-	        handle.postDelayed(new Runnable() {
-	        	@Override
-	        	public void run() {
-
-	        	}
-	        },2000);
-        }
-        */
-        return true;
+        v.setBackgroundColor(viewHolder.getColor());rn true;
 	}
 	
 	
 	public GestureDetector getDetector() {
 		return gDetector;
 	}
-
+	*/
 }
 

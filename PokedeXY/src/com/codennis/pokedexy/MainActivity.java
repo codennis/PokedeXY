@@ -18,34 +18,23 @@ public class MainActivity extends Activity {
 	private ArrayList<Pokemon> pokedex = new ArrayList<Pokemon>();
 	private SQLiteDatabase newDB;
 	public View row;
-	private SwipeListener listener;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-		listener = new SwipeListener(MainActivity.this);
-		
 		DBHelper dbh = DBHelper.getInstance(this);
 		newDB = dbh.openDatabase();
 		storeData();
-		// Stuff with database
-		
-		/*
-		pokedex.add(new Pokemon(1,0,0,0,"Test",""));
-		pokedex.add(new Pokemon(2,0,0,0,"Test2",""));
-		pokedex.add(new Pokemon(3,0,0,0,"Test3",""));
-		pokedex.add(new Pokemon(4,0,0,0,"TestA",""));
-		pokedex.add(new Pokemon(5,0,0,0,"TestB",""));
-		*/
+
 		displayList();
 		
 	}
 	
+	// Update database when pause or close
 	@Override
 	protected void onPause() {
-		
 		for (Pokemon poke:pokedex) {
 			Log.i("MAIN",poke.getName() + (poke.getCaught() ? 1 : 0));
 			ContentValues cv = new ContentValues();
@@ -69,17 +58,7 @@ public class MainActivity extends Activity {
 	
 	private void displayList() {
 		final ListView pokedexList = (ListView) findViewById(R.id.nationalDex);
-		/*
-		pokedexList.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View v, int pos, long id) {
-				// TODO Auto-generated method stub
-				Log.i("MAIN", "onitemclick");
-				listener.setPosition(pos);
-			}
-		});
-		*/
-		pokedexList.setAdapter(new PokedexAdapter(this, pokedex, listener));
+		pokedexList.setAdapter(new PokedexAdapter(this, pokedex));
 	}
 	
 	@Override

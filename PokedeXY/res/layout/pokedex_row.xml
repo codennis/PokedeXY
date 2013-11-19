@@ -1,21 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-	android:padding="12dp" 
-	android:clickable="true" >
+    android:layout_height="50dp"
+	android:clickable="true"
+	android:orientation="horizontal"
+	android:background="@drawable/custom_selector" >"
 	
-    <TextView
-        android:id="@+id/row_number"
-        android:layout_width="50dp"
-        android:layout_height="25dp"
-        android:text="TextView" />
+    <ImageView
+        android:id="@+id/red"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/red" />
+    
+    <ImageView
+        android:id="@+id/green"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/green" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="6dp"
+        android:paddingLeft="12dp" >
 
-    <TextView
-        android:id="@+id/row_name"
-        android:layout_width="100dp"
-        android:layout_height="25dp"
-        android:text="TextView" />
+        <TextView
+            android:id="@+id/row_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="###"
+            android:textSize="30dp" />
+	
+	    <TextView
+	        android:id="@+id/row_name"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="35dp"
+	        android:layout_toRightOf="@+id/row_number"
+	        android:layout_weight="0.8"
+	        android:text="TextView"
+	        android:textSize="30dp" />
+        
+    </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
