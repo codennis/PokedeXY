@@ -4,12 +4,15 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
@@ -17,7 +20,9 @@ public class MainActivity extends Activity {
 	private static final String POKE = "Pokemon";
 	private ArrayList<Pokemon> pokedex = new ArrayList<Pokemon>();
 	private SQLiteDatabase newDB;
+	private PokedexAdapter adapter;
 	public View row;
+	ListView pokedexList;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +31,29 @@ public class MainActivity extends Activity {
 		
 		DBHelper dbh = DBHelper.getInstance(this);
 		newDB = dbh.openDatabase();
+		
 		storeData();
-
+		pokedexList = (ListView) findViewById(R.id.nationalDex);
 		displayList();
 		
+		
+		// Temp filter testing
+		final Button button = (Button) findViewById(R.id.button2);
+		button.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Log.i("MAIN", "CLICKED");
+				adapter.toggleCaught();
+				adapter.getFilter().filter(null);
+				pokedexList.setAdapter(adapter);
+
+				Log.i("POKE", "POKEDEX");
+				for (Pokemon poke:pokedex) {
+					Log.i("POKEDEX",poke.getNID() + poke.getName());
+				}
+			}
+		});
 	}
 	
 	// Update database when pause or close
@@ -44,21 +68,34 @@ public class MainActivity extends Activity {
 		super.onPause();
 	}
 
+	@Override
+	protected void onResume() {
+		DBHelper dbh = DBHelper.getInstance(this);
+		newDB = dbh.openDatabase();
+		storeData();
+		displayList();
+		Log.i("RESUME","RESUMING");
+		super.onResume();
+	}
+	// Initial loading of database
 	private void storeData() {
-		Cursor c = newDB.rawQuery("SELECT _id, name, location, caught FROM pokedex",null); //"name asc");
+		Cursor c = newDB.rawQuery("SELECT _id, name, location, caught, evo_id FROM pokedex",null); //"name asc");
 		c.moveToFirst();
+		pokedex.clear();
 		if (!c.isAfterLast()) {
 			do {
-				Log.i("storing", c.getInt(0) + c.getString(1) + c.getInt(3));
-				pokedex.add(new Pokemon(c.getInt(0),0,0,0,c.getString(1),c.getString(2),c.getInt(3)));
+				//Log.i("MAIN STORING", c.getInt(0) + c.getString(1) + c.getInt(3));
+				pokedex.add(new Pokemon(c.getInt(0),0,0,0,c.getString(1),c.getString(2),c.getInt(3),c.getInt(4)));
 			} while (c.moveToNext());
 		}
 		c.close();
 	}
 	
+	// Call adapter to display listview of pokedex
 	private void displayList() {
-		final ListView pokedexList = (ListView) findViewById(R.id.nationalDex);
-		pokedexList.setAdapter(new PokedexAdapter(this, pokedex));
+		adapter = new PokedexAdapter(this,pokedex);
+		pokedexList.setTextFilterEnabled(true);
+		pokedexList.setAdapter(adapter);
 	}
 	
 	@Override
@@ -67,7 +104,6 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
 }
 
 

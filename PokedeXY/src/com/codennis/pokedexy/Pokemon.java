@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class Pokemon implements Parcelable {
-	private int nID, ceID, coID, mtID;
+	private int nID, ceID, coID, mtID, evoID;
 	private String name, locations;
 	private int caught;
 	
@@ -14,7 +14,7 @@ public class Pokemon implements Parcelable {
 		super();
 	}
 	
-	public Pokemon(int nID, int ceID, int coID, int mtID, String name, String locations, int caught) {
+	public Pokemon(int nID, int ceID, int coID, int mtID, String name, String locations, int caught, int evo) {
 		this.nID = nID;
 		this.ceID = ceID;
 		this.coID = coID;
@@ -22,6 +22,7 @@ public class Pokemon implements Parcelable {
 		this.name = name;
 		this.locations = locations;
 		this.caught = caught;
+		this.evoID = evo;
 	}
 	
 	@Override
@@ -40,6 +41,9 @@ public class Pokemon implements Parcelable {
 	}
 	public int getMtID() {
 		return mtID;
+	}
+	public int getEvo() {
+		return evoID;
 	}
 	
 	public String getName() {

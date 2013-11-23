@@ -25,6 +25,14 @@ public class OnSwipeListener implements OnTouchListener {
 	public boolean onTouch(final View v, final MotionEvent me) {
 		return gDetector.onTouchEvent(me);
 	}
+
+    public boolean onDoubleTap(MotionEvent e) { return true; }
+    public boolean onDoubleEvent(MotionEvent e) { return true; }
+    public boolean onDown(MotionEvent e) { return true; }
+    public boolean onLongPress(MotionEvent e) { return true; }
+    public boolean onScroll(MotionEvent e) { return true; }
+    public boolean onShowPress(MotionEvent e) { return true; }
+    public boolean onSingleTapConfirmed(MotionEvent e) { return true; }
 	
 	private final class GestureListener extends SimpleOnGestureListener {
 		private static final int SWIPE_THRESHOLD = 100;

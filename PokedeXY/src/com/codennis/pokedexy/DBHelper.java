@@ -78,11 +78,11 @@ public class DBHelper extends SQLiteOpenHelper {
 		while ((bytesRead = iStream.read(buffer)) > 0) {
 			oStream.write(buffer, 0, bytesRead);
 		}
-		
 		oStream.close();
 		iStream.close();
 	}
 
+	// Open database for read/write
 	public SQLiteDatabase openDatabase() throws SQLException {
 		String path = DB_PATH + DB_NAME;
 		if (database == null) {
