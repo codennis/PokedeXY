@@ -24,18 +24,21 @@ public final class R {
         public static final int custom_selector=0x7f020000;
         public static final int green=0x7f020001;
         public static final int ic_launcher=0x7f020002;
-        public static final int red=0x7f020003;
     }
     public static final class id {
-        public static final int action_settings=0x7f08000a;
-        public static final int button2=0x7f080002;
-        public static final int evoList=0x7f080007;
-        public static final int green=0x7f080004;
-        public static final int heading=0x7f080000;
-        public static final int location=0x7f080009;
-        public static final int name=0x7f080008;
-        public static final int nationalDex=0x7f080001;
-        public static final int red=0x7f080003;
+        public static final int action_settings=0x7f08000e;
+        public static final int counter=0x7f080002;
+        public static final int evo=0x7f08000d;
+        public static final int evoList=0x7f080009;
+        public static final int filterCheck=0x7f080001;
+        public static final int green=0x7f080003;
+        public static final int kalos=0x7f08000b;
+        public static final int kalos_number=0x7f080008;
+        public static final int linearLayout1=0x7f080004;
+        public static final int location=0x7f08000c;
+        public static final int name=0x7f08000a;
+        public static final int nationalDex=0x7f080000;
+        public static final int row_dets=0x7f080007;
         public static final int row_name=0x7f080006;
         public static final int row_number=0x7f080005;
     }
@@ -50,6 +53,7 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f050001;
         public static final int app_name=0x7f050000;
+        public static final int filter_caught=0x7f050003;
         public static final int hello_world=0x7f050002;
     }
     public static final class style {

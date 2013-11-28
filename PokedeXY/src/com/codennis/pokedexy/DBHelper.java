@@ -11,11 +11,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * @author codennis
+ *
+ */
 public class DBHelper extends SQLiteOpenHelper {
 	private static DBHelper sInstance = null;
 	
 	private static String DB_PATH;
-	private static String DB_NAME = "test";
+	private static String DB_NAME = "pokedex";
 	private SQLiteDatabase database;
 	public final Context context;
 	
@@ -39,6 +43,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		openDatabase();
 	}
 	
+	// Create database if not yet created
 	public void createDatabase() {
 		boolean dbExists = checkDatabase();
 		if (!dbExists) {
@@ -54,6 +59,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 	}
 	
+	// Check if database already exists
 	private boolean checkDatabase() {
 		SQLiteDatabase checkDb = null;
 		try {
@@ -69,6 +75,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		return checkDb != null;
 	}
 	
+	// Copy database from file
 	private void copyDatabase() throws IOException {
 		InputStream iStream = context.getAssets().open(DB_NAME);
 		OutputStream oStream = new FileOutputStream(DB_PATH + DB_NAME);
@@ -89,7 +96,6 @@ public class DBHelper extends SQLiteOpenHelper {
 			createDatabase();
 			database = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE);
 		}
-		
 		return database;
 	}
 	

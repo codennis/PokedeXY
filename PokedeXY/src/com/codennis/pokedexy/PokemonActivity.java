@@ -12,25 +12,29 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class PokemonActivity extends Activity {
-	private Pokemon pokemon;
-	private SQLiteDatabase newDB;
+	private Pokemon poke;
+	private SQLiteDatabase db;
 	private ArrayList<Pokemon> pokedex;
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pokemon);
 
 		DBHelper dbh = DBHelper.getInstance(this);
-		newDB = dbh.openDatabase();
-		// Receive pokemon object to display details about
+		db = dbh.openDatabase();
 		Intent i = getIntent();
-		//pokemon = (Pokemon) i.getExtras().getParcelable("TEST");
 		int id = i.getExtras().getInt("poke_id");
-		Cursor c = newDB.rawQuery("SELECT _id, name, location, caught, evo_id FROM pokedex WHERE _id="+id,null);
+
+		String query = "SELECT _id, kalos, k_id, name, caught, evo_series, evo_lvl, evo_how, depth FROM pokedex";
+		Cursor c = db.rawQuery(query + " WHERE _id=" + id,null);
 		c.moveToFirst();
 		if (!c.isAfterLast())
-			pokemon = new Pokemon(c.getInt(0),0,0,0,c.getString(1),c.getString(2),c.getInt(3),c.getInt(4));
+			poke = new Pokemon(c.getInt(0),c.getInt(1),c.getInt(2),c.getString(3),
+					c.getInt(4),c.getString(5),c.getInt(6),c.getString(7),c.getInt(8));
 		else {
 			Log.e("PokemonActivity", "Could not load pokemon.");
 			return;
@@ -38,42 +42,76 @@ public class PokemonActivity extends Activity {
 		c.close();
 		final TextView viewName = (TextView) findViewById(R.id.name);
 		final TextView viewLocation = (TextView) findViewById(R.id.location);
+		final TextView viewKalos = (TextView) findViewById(R.id.kalos);
 		
-		viewName.setText(pokemon.getName());
-		viewLocation.setText(pokemon.getLocation());
+		String tempText, textID = "";
+		viewName.setText(poke.toString());
+		
+		tempText = "Kalos: ";
+		if (poke.getKID() != 0)
+			textID = "" + poke.getKID();
+		if (textID.length() == 1)
+			textID = "00" + textID;
+		else if (textID.length() == 2)
+			textID = "0" + textID;
+		switch (poke.getKalos()) {
+		case 1:
+			tempText += "Central  #";
+			break;
+		case 2:
+			tempText += "Coastal  #";
+			break;
+		case 3:
+			tempText += "Mountain  #";
+			break;
+		default:
+			tempText += "N/A";
+		}
+		viewKalos.setText(tempText + textID);
+		viewLocation.setText(location());
 		
 		pokedex = new ArrayList<Pokemon>();
-		c = newDB.rawQuery("SELECT _id, name, location, caught, evo_id FROM pokedex",null);
+		c = db.rawQuery(query,null);
 		c.moveToFirst();
 		if (!c.isAfterLast()) {
 			do {
-				pokedex.add(new Pokemon(c.getInt(0),0,0,0,c.getString(1),c.getString(2),c.getInt(3),c.getInt(4)));
+				pokedex.add(new Pokemon(c.getInt(0),c.getInt(1),c.getInt(2),c.getString(3),
+						c.getInt(4),c.getString(5),c.getInt(6),c.getString(7),c.getInt(8)));
 			} while (c.moveToNext());
 		}
 		c.close();
 		
 		ListView evoList = (ListView) findViewById(R.id.evoList);
 		evoList.setTextFilterEnabled(true);
-		PokedexAdapter adapter = new PokedexAdapter(this, pokedex, pokemon.getEvo());
-		adapter.getFilter().filter(null);
+		PokedexAdapter adapter = new PokedexAdapter(this, pokedex);
+		adapter.setEvo(poke.getEvo());
 		evoList.setAdapter(adapter);
-		/*
-		final Button button = (Button) findViewById(R.id.button1);
-		button.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Log.i("POKEMON", "CLICKED");
-				Pokemon poke = new Pokemon(10,0,0,0,"Testamon","testloc", 0);
-				Context context = v.getContext();
-		    	Intent i = new Intent(context, PokemonActivity.class);
-		    	Bundle b = new Bundle();
-		    	b.putParcelable("TEST", poke);
-		    	i.putExtras(b);
-		    	context.startActivity(i);
-				
-			}
-		});
-		*/
+	}
+	
+	private String location() {
+		String temp, xy, how;
+		Boolean first = true;
+		String query = "SELECT location, xy, location_how FROM locations where name=?";
+		Cursor c = db.rawQuery(query,new String[] { poke.getName() });
+		temp = "Locations: ";
+		c.moveToFirst();
+		if (!c.isAfterLast()) {
+			do {
+				if (!first)
+					temp += ", ";
+				temp += c.getString(0);
+				xy = c.getString(1);
+				how = c.getString(2);
+				if (!how.isEmpty())
+					temp += " - " + how;
+				if (!xy.isEmpty())
+					temp += " (" + xy + ")";
+				first = false;
+			} while (c.moveToNext());
+		} else {
+			temp += "N/A";
+		}
+		c.close();
+		return temp;
 	}
 }

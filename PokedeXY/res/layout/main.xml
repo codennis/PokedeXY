@@ -9,29 +9,43 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
     
-    <TextView
-        android:id="@+id/heading"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Pokedex"
-        android:textColor="@android:color/background_light"
-        android:textSize="30dp" />
-
     <ListView
         android:id="@+id/nationalDex"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/button2"
-        android:layout_below="@+id/heading"
-        android:padding="4dp" />
+        android:layout_above="@+id/filterCheck"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@android:id/tabhost"
+        android:padding="4dp" >
+        </ListView>
 
-    <Button
-        android:id="@+id/button2"
+    <TextView
+        android:id="@+id/counter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/filterCheck"
+        android:layout_alignBottom="@+id/filterCheck"
         android:layout_alignLeft="@+id/nationalDex"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="18dp"
-        android:text="Filter tester" />
+        android:layout_marginBottom="18dp"
+        android:layout_marginLeft="15dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/background_light" />
     
+    <CheckedTextView
+        android:id="@+id/filterCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/nationalDex"
+        android:layout_marginBottom="18dp"
+        android:layout_marginRight="15dp"
+        android:drawable="@android:color/background_light"
+        android:text="@string/filter_caught"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:checked="false"
+        android:focusable="true"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        android:textColor="@android:color/background_light" />
+
 </RelativeLayout>

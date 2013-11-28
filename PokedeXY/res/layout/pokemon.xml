@@ -9,13 +9,14 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin" >
 
+
     <ListView
         android:id="@+id/evoList"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="210dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="39dp" >
+        android:layout_marginBottom="30dp" >
     </ListView>
 
     <TextView
@@ -24,20 +25,38 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/evoList"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="40dp"
-        android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/background_light" />
+
+    <TextView
+        android:id="@+id/kalos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/name"
+        android:layout_below="@+id/name"
+        android:paddingTop="12dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/background_light" />
 
     <TextView
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/name"
-        android:layout_below="@+id/name"
-        android:layout_marginTop="39dp"
-        android:text="Medium Text"
+        android:layout_alignLeft="@+id/kalos"
+        android:layout_below="@+id/kalos"
+        android:paddingTop="24dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/background_light" />
 
+    <TextView
+        android:id="@+id/evo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/evoList"
+        android:layout_alignLeft="@+id/evoList"
+        android:text="Evolutions"
+        android:padding="8dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:textColor="@android:color/background_light" />
+    
 </RelativeLayout>

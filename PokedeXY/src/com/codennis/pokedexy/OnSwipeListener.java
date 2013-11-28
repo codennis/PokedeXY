@@ -1,8 +1,6 @@
 package com.codennis.pokedexy;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -15,14 +13,40 @@ public class OnSwipeListener implements OnTouchListener {
 	private final GestureDetector gDetector;
 	protected final View view;
 	protected final Context context;
+	protected float initX, initY = 0;
+	protected float downTime;
 	
+	/**
+	 * @param context
+	 * @param v
+	 */
 	public OnSwipeListener(Context context, View v) {
 		gDetector = new GestureDetector(context, new GestureListener());
 		view = v;
 		this.context = context;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.view.View.OnTouchListener#onTouch(android.view.View, android.view.MotionEvent)
+	 */
 	public boolean onTouch(final View v, final MotionEvent me) {
+		if (me.getAction() == MotionEvent.ACTION_DOWN) {
+			initX = me.getX();
+			initY = me.getY();
+			downTime = me.getDownTime();
+			initDown();
+		}
+		if (me.getAction() == MotionEvent.ACTION_MOVE) {
+			if (Math.abs(me.getY() - initY) < Math.abs(me.getX() - initX)) {
+				v.getParent().requestDisallowInterceptTouchEvent(true);
+				onDrag(me);
+			} else {
+				v.getParent().requestDisallowInterceptTouchEvent(false);
+			}
+		}
+		if (me.getAction() == MotionEvent.ACTION_UP) {
+			onUp(me);
+		}
 		return gDetector.onTouchEvent(me);
 	}
 
@@ -34,13 +58,14 @@ public class OnSwipeListener implements OnTouchListener {
     public boolean onShowPress(MotionEvent e) { return true; }
     public boolean onSingleTapConfirmed(MotionEvent e) { return true; }
 	
+    
 	private final class GestureListener extends SimpleOnGestureListener {
 		private static final int SWIPE_THRESHOLD = 100;
 		private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 		
 		@Override
 		public boolean onDown(MotionEvent e) {
-			return true;
+			return false;
 		}
 		
 	    @Override
@@ -48,30 +73,10 @@ public class OnSwipeListener implements OnTouchListener {
 	    	onTap();
 	    	return false;
 	    }
-	    
-		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velX, float velY) {
-			boolean result = false;
-			
-			try {
-				float diffX = e2.getX() - e1.getX();
-				Log.i("SWIPE", "" + e1.getX() + " to " + e2.getX());
-				if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velX) > SWIPE_VELOCITY_THRESHOLD) {
-					if (diffX > 0) {
-						onSwipeRight();
-					} else {
-						onSwipeLeft();
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			return result;
-		}
 	}
 
+	public boolean initDown() { return true; }
+	public boolean onDrag(MotionEvent me) { return true; }
+	public boolean onUp(MotionEvent me) { return true; }
     public boolean onTap() { return true; }
-	public boolean onSwipeRight() { return true; };
-	public boolean onSwipeLeft() { return true; };
 }
