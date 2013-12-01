@@ -1,37 +1,33 @@
 package com.codennis.pokedexy;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class Pokemon implements Parcelable {
+public class Pokemon {
 	private int nID, kalos, kID, evoLvl, caught, depth;
 	private String name, evoSeries, evoHow, location, locationHow, xy;
+	private ArrayList<Pair> safari;
+	private int whichSaf;
 	
-	/**
-	 * 
-	 */
 	public Pokemon() {
 		super();
 	}
 	
-	/**
-	 * @param nID
-	 * @param kalos
-	 * @param kID
-	 * @param name
-	 * @param caught
-	 */
-	public Pokemon(int nID, int kalos, int kID, String name, int caught) {
-		this.nID = nID;
-		this.kalos = kalos;
-		this.kID = kID;
-		this.name = name;
-		this.caught = caught;
-	}
-
-	public Pokemon(int nID, int kalos, int kID, String name, int caught, String evoSeries, int evoLvl, String evoHow, int depth) {
+	public Pokemon(int 		nID, 
+				   int 		kalos,
+				   int		kID,
+				   String	name,
+				   int 		caught,
+				   String 	evoSeries,
+				   int 		evoLvl,
+				   String 	evoHow,
+				   int 		depth) {
+		
 		this.nID = nID;
 		this.kalos = kalos;
 		this.kID = kID;
@@ -41,130 +37,128 @@ public class Pokemon implements Parcelable {
 		this.evoLvl = evoLvl;
 		this.evoHow = evoHow;
 		this.depth = depth;
-	}
-
-	@Override
-	public String toString() {
-		String text;
-		text = "" + nID;
-		if (text.length() == 1)
-			text = "00" + text;
-		else if (text.length() == 2)
-			text = "0" + text;
-		text = name + "   #" + text;
-		return text;
+		this.safari = new ArrayList<Pair>();
+		this.whichSaf = 0;
 	}
 	
-	public int getNID() {
-		return nID;
+	@Override
+	public String toString() {
+		return "";
 	}
-	public int getKalos() {
-		return kalos;
-	}
-	public int getKID() {
-		return kID;
-	}
-	public String getName() {
-		return name;
-	}
-	public String getEvo() {
-		return evoSeries;
-	}
-	public String getEvoHow() {
-		return evoHow;
-	}
-	public int getEvoLvl() {
-		return evoLvl;
-	}
-	public int getDepth() {
-		return depth;
-	}
-	/**
-	 * @return
-	 */
-	public String getLocation() {
-		return location;
-	}
-	/**
-	 * @param caught
-	 */
-	public void setCaught(boolean caught) {
-		this.caught = caught ? 1 : 0;
-	}
-	/**
-	 * @return
-	 */
+
 	public boolean getCaught() {
 		return (caught == 1 ? true : false);
 	}
-
-	/* (non-Javadoc)
-	 * @see android.os.Parcelable#describeContents()
-	 */
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
+	
+	public void setCaught(int caught) {
+		this.caught = caught;
+	}
+	public void setCaught(boolean caught) {
+		this.caught = caught ? 1 : 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see android.os.Parcelable#writeToParcel(android.os.Parcel, int)
-	 */
-	@Override
-	public void writeToParcel(Parcel out, int flags) {
-		// TODO Auto-generated method stub		
-		out.writeInt(nID);		
-		out.writeInt(kID);
+	public int getNID() {
+		return nID;
+	}
+	public String getNIDString() {
+		String textID;
+		if (nID < 10)
+			textID = "00" + nID;
+		else if (nID < 100)
+			textID = "0" + nID;
+		else
+			textID = "" + nID;
+		return textID;
+	}
 
-		out.writeString(name);
-		out.writeString(location);
-		
-		out.writeInt(caught);
+	public int getKalos() {
+		return kalos;
+	}
+
+	public int getKID() {
+		return kID;
+	}
+	public String getKIDString() {
+		String textID;
+		if (kID < 10)
+			textID = "00" + kID;
+		else if (kID < 100)
+			textID = "0" + kID;
+		else
+			textID = "" + kID;
+		return textID;
+	}
+
+	public int getEvoLvl() {
+		return evoLvl;
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getEvoSeries() {
+		return evoSeries;
+	}
+
+	public String getEvoHow() {
+		return evoHow;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public String getLocationHow() {
+		return locationHow;
+	}
+
+	public String getXy() {
+		return xy;
 	}
 	
-	public static final Parcelable.Creator<Pokemon> CREATOR = new Parcelable.Creator<Pokemon>() {
-		public Pokemon createFromParcel(Parcel in) {
-			return new Pokemon(in);
-		}
-		public Pokemon[] newArray(int size) {
-			return new Pokemon[size];
-		}
-	};
-	
-	
-	/**
-	 * @param in
-	 */
-	private Pokemon(Parcel in) {
-		this.nID = in.readInt();
-		this.kID = in.readInt();
-		
-		this.name = in.readString();
-		this.location = in.readString();
-		
-		this.caught = in.readInt();
+	public Pair getSafari(int i) {
+		return safari.get(i);
+	}
+	public void setWhichSaf(int i) {
+		whichSaf = i;
+	}
+	public int getWhichSaf() {
+		return whichSaf;
 	}
 	
+	public void addSafari(String type, int slot) {
+		safari.add(new Pair(type,  slot));
+	}
 }
 
+class Pair<L,R> {
+	  private final L left;
+	  private final R right;
+
+	  public Pair(L left, R right) {
+	    this.left = left;
+	    this.right = right;
+	  }
+
+	  public L getLeft() { return left; }
+	  public R getRight() { return right; }
+}
 
 class ViewHolder {
-    protected TextView text;
     protected ImageView icon;
-    protected int position;
     private int imageid;
-    boolean caught;
-	TextView txtName;
-	TextView txtNumber;
-	TextView txtDet;
-	TextView txtKalos;
+	protected TextView col1;
+	protected TextView col2;
+	protected TextView col3;
+	protected TextView col4;
 	
-    public ViewHolder()
-    { }
+    public ViewHolder() { }
     
-    /**
-     * @return
-     */
     public int getImageId() {
         return imageid;
     }

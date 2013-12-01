@@ -10,6 +10,7 @@ import android.app.FragmentTransaction;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,8 +29,8 @@ public class MainActivity extends Activity implements TabListener {
 	private ArrayList<Pokemon> pokedex = new ArrayList<Pokemon>();
 	private SQLiteDatabase db;
 	private PokedexAdapter adapter;
-	private View row;
 	private ListView pokedexList;
+	private String kalos;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -46,14 +47,12 @@ public class MainActivity extends Activity implements TabListener {
 		actionBar.addTab(actionBar.newTab().setText("Central").setTabListener(this));
 		actionBar.addTab(actionBar.newTab().setText("Coastal").setTabListener(this));
 		actionBar.addTab(actionBar.newTab().setText("Mountain").setTabListener(this));
-		//actionBar.addTab(actionBar.newTab().setText("Safari").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("Safari").setTabListener(this));
 		
 		DBHelper dbh = DBHelper.getInstance(this);
-		db = dbh.openDatabase();
-
+		db = dbh.getDb();
 		pokedexList = (ListView) findViewById(R.id.nationalDex);
 		initializePokedex();
-		
 		// Set up filtering checkbox to update listview.
 		final CheckedTextView filterCheck = (CheckedTextView) findViewById(R.id.filterCheck);
 		filterCheck.setOnClickListener(new OnClickListener() {
@@ -68,10 +67,23 @@ public class MainActivity extends Activity implements TabListener {
 	
 	@Override
 	protected void onResume() {
-        adapter.getFilter().filter(null);
 		super.onResume();
+		adapter.updatePokedex();
+		adapter.getFilter().filter(null);
 	}
 
+	protected void showData() {
+		String query = "SELECT name, safari FROM safari";
+		Cursor c = db.rawQuery(query,null);
+		c.moveToFirst();
+		if (!c.isAfterLast()) {
+			do {
+				Log.i("83", c.getString(0) + " " + c.getString(1));
+			} while (c.moveToNext());
+		}
+		c.close();
+	}
+	
 	/**
 	 *   Read database and store data into Pokedex arrayList. Then set up adapter to display
 	 *   in the Pokedex listView.
@@ -87,9 +99,23 @@ public class MainActivity extends Activity implements TabListener {
 						c.getInt(4),c.getString(5),c.getInt(6),c.getString(7),c.getInt(8)));
 			} while (c.moveToNext());
 		}
+		
+		query = "SELECT _id, safari, slot FROM safari NATURAL JOIN pokedex";
+		c = db.rawQuery(query, null);
+		c.moveToFirst();
+		Pokemon poke;
+		if (!c.isAfterLast()) {
+			do {
+				poke = pokedex.get(c.getInt(0) - 1);
+				poke.addSafari(c.getString(1),c.getInt(2));
+			} while (c.moveToNext());
+		}
+		
 		c.close();
 
+		final CheckedTextView filterCheck = (CheckedTextView) findViewById(R.id.filterCheck);
 		adapter = new PokedexAdapter(this, pokedex, (TextView) findViewById(R.id.counter));
+		adapter.updateHeader(findViewById(android.R.id.content));
 		pokedexList.setTextFilterEnabled(true);
 		pokedexList.setAdapter(adapter);
 	}
@@ -108,35 +134,25 @@ public class MainActivity extends Activity implements TabListener {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
-	 * Save current actionBar tab.
-	 */
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putInt(STATE_SELECTED_NAV_ITEM, getActionBar().getSelectedNavigationIndex());
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.ActionBar.TabListener#onTabSelected(android.app.ActionBar.Tab, android.app.FragmentTransaction)
-	 */
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction arg1) {
-		if (adapter != null)
-			adapter.setKalos(tab.getText().toString());
+		kalos = tab.getText().toString();
+		if (adapter != null) {
+			adapter.setKalos(kalos);
+			adapter.updateHeader(findViewById(android.R.id.content));
+		}
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.ActionBar.TabListener#onTabReselected(android.app.ActionBar.Tab, android.app.FragmentTransaction)
-	 */
 	@Override
 	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
 		// Do nothing
 	}
-	
-	/* (non-Javadoc)
-	 * @see android.app.ActionBar.TabListener#onTabUnselected(android.app.ActionBar.Tab, android.app.FragmentTransaction)
-	 */
+
 	@Override
 	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
 		// Do nothing

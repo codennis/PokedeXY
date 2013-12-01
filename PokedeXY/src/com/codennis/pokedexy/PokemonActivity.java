@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,16 +15,13 @@ public class PokemonActivity extends Activity {
 	private SQLiteDatabase db;
 	private ArrayList<Pokemon> pokedex;
 	
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pokemon);
 
 		DBHelper dbh = DBHelper.getInstance(this);
-		db = dbh.openDatabase();
+		db = dbh.getDb();
 		Intent i = getIntent();
 		int id = i.getExtras().getInt("poke_id");
 
@@ -36,7 +32,7 @@ public class PokemonActivity extends Activity {
 			poke = new Pokemon(c.getInt(0),c.getInt(1),c.getInt(2),c.getString(3),
 					c.getInt(4),c.getString(5),c.getInt(6),c.getString(7),c.getInt(8));
 		else {
-			Log.e("PokemonActivity", "Could not load pokemon.");
+			//Log.e("PokemonActivity", "Could not load pokemon.");
 			return;
 		}
 		c.close();
@@ -84,7 +80,7 @@ public class PokemonActivity extends Activity {
 		ListView evoList = (ListView) findViewById(R.id.evoList);
 		evoList.setTextFilterEnabled(true);
 		PokedexAdapter adapter = new PokedexAdapter(this, pokedex);
-		adapter.setEvo(poke.getEvo());
+		adapter.setEvo(poke.getEvoSeries());
 		evoList.setAdapter(adapter);
 	}
 	

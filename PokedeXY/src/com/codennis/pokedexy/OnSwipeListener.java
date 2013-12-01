@@ -1,7 +1,6 @@
 package com.codennis.pokedexy;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -29,6 +28,7 @@ public class OnSwipeListener implements OnTouchListener {
 	/* (non-Javadoc)
 	 * @see android.view.View.OnTouchListener#onTouch(android.view.View, android.view.MotionEvent)
 	 */
+	@Override
 	public boolean onTouch(final View v, final MotionEvent me) {
 		if (me.getAction() == MotionEvent.ACTION_DOWN) {
 			initX = me.getX();

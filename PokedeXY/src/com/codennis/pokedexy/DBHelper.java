@@ -4,8 +4,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -22,6 +26,10 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static String DB_NAME = "pokedex";
 	private SQLiteDatabase database;
 	public final Context context;
+	private boolean isOpen = false;
+	private static int VERSION = 9;
+	
+	private Map<Integer,Integer> caught = new HashMap<Integer,Integer>();
 	
 	public SQLiteDatabase getDb() {
 		return database;
@@ -34,12 +42,14 @@ public class DBHelper extends SQLiteOpenHelper {
 		return sInstance;
 	}
 	
-	private DBHelper(Context context) {
-		super(context, DB_NAME ,null,1);
+	DBHelper(Context context) {
+		super(context, DB_NAME ,null,VERSION);
+		Log.i("DB","Constructor");
 		this.context = context;
 		
 		String packageName = context.getPackageName();
 		DB_PATH = String.format("/data/data/%s/databases/",packageName);
+		createDatabase();
 		openDatabase();
 	}
 	
@@ -47,11 +57,11 @@ public class DBHelper extends SQLiteOpenHelper {
 	public void createDatabase() {
 		boolean dbExists = checkDatabase();
 		if (!dbExists) {
-			this.getReadableDatabase();
+			Log.i("going","tocopy");
 			try {
 				copyDatabase();
 			} catch (IOException e) {
-				Log.e(this.getClass().toString(), "Copy error");
+				//Log.e(this.getClass().toString(), "Copy error");
 				throw new Error ("Error copying database");
 			}
 		} else {
@@ -61,6 +71,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	// Check if database already exists
 	private boolean checkDatabase() {
+		Log.i("Checking" , "database");
 		SQLiteDatabase checkDb = null;
 		try {
 			String path = DB_PATH + DB_NAME;
@@ -92,10 +103,8 @@ public class DBHelper extends SQLiteOpenHelper {
 	// Open database for read/write
 	public SQLiteDatabase openDatabase() throws SQLException {
 		String path = DB_PATH + DB_NAME;
-		if (database == null) {
-			createDatabase();
-			database = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE);
-		}
+		Log.i("opening","database");
+		database = this.getWritableDatabase();
 		return database;
 	}
 	
@@ -108,8 +117,49 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 	
     @Override
-    public void onCreate(SQLiteDatabase db) {}
+    public void onCreate(SQLiteDatabase db) {
+    	Log.i("CREATE","ON");
+    	createDatabase();
+    }
     
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    	Log.i("Upgrading", "FROM " + oldVersion + " to " + newVersion);
+    	updateDatabase(db);
+		Log.i("Upgrading", "Added table");
+    }
+    
+    private void updateDatabase(SQLiteDatabase db) {
+
+    	// Copy data from existing DB
+		String query = "SELECT _id, caught FROM pokedex";
+		Cursor c = db.rawQuery(query,null);
+		c.moveToFirst();
+		if (!c.isAfterLast()) {
+			do {
+				caught.put(c.getInt(0),c.getInt(1));
+			} while (c.moveToNext());
+		}
+		c.close();
+    	
+		Log.i("update", "setcaught");
+		try {
+			Log.i("COPY","COPIED");
+			copyDatabase();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	Log.i("updating","database");
+		ContentValues vals;
+		for (Map.Entry entry:caught.entrySet()) {
+			vals = new ContentValues();
+			vals.put("caught", (Integer)entry.getValue());
+			database.update("pokedex", vals, "_id = " + (Integer)entry.getKey(),null);
+			Log.i("updating",(Integer)entry.getKey() + " " + (Integer)entry.getValue());
+			
+		}
+		close();
+    	
+    }
 }
