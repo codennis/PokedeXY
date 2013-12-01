@@ -1,20 +1,18 @@
 package com.codennis.pokedexy;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+//import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -22,7 +20,6 @@ import android.view.animation.Transformation;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -122,14 +119,11 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 	}
 	
 	public void updateHeader(View view) {
-		if (getEvoSeries() != null) 
-			return;
 		TextView col1 = (TextView) view.findViewById(R.id.header_first);
 		TextView col2 = (TextView) view.findViewById(R.id.header_second);
 		TextView col3 = (TextView) view.findViewById(R.id.header_third);
 		TextView col4 = (TextView) view.findViewById(R.id.header_fourth);
 		String first, second, third, fourth;
-		Log.i("KALOS",kalos+"");
 		switch (kalos)
 		{
 		case 0:
@@ -205,12 +199,14 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 		
 		if (convertView == null) {
 			view = mInflater.inflate(R.layout.pokedex_row, parent, false); // ******************************************** row
+			
 			view.setTag(viewHolder);
 			
 			viewHolder.col1 = (TextView)view.findViewById(R.id.row_first);
 			viewHolder.col2 = (TextView)view.findViewById(R.id.row_second);
 			viewHolder.col3 = (TextView)view.findViewById(R.id.row_third);
 			viewHolder.col4 = (TextView)view.findViewById(R.id.row_fourth);
+			
 			holder = viewHolder;
 		} else {
 			view = convertView;
@@ -270,14 +266,8 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 		holder.col1.setText(poke.getNIDString());
 		holder.col2.setText(poke.getName());
 		
-		String text;
 		if (evoSeries == null) { // Pokedex
 			String kalosText = "";
-			if (poke.getKID() > 0 && poke.getKID() < 4)
-				text = poke.getKIDString();
-			else
-				text = "";
-			
 			switch (poke.getKalos()) {
 			case 1:
 				kalosText = "Central";
@@ -293,6 +283,7 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 				holder.col3.setText(kalosText);
 				holder.col4.setText(poke.getKIDString());
 			} else {
+				@SuppressWarnings("rawtypes")
 				Pair pair = poke.getSafari(whichSaf);
 				if (pair != null) {
 					holder.col3.setText("" + pair.getLeft());
@@ -309,10 +300,12 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 					evoText += ": ";
 				evoText += poke.getEvoHow();
 			}
-			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			
-			holder.col3.setText(evoText);
-			holder.col4.setText("");
+
+			holder.col3.setText(poke.getEvoHow());
+			if (poke.getEvoLvl() > 0)
+				holder.col4.setText("" + poke.getEvoLvl());
+			else
+				holder.col4.setText("");
 		}
 	}
 	
@@ -405,6 +398,7 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 			} while (c.moveToNext());
 		}
 		c.close();
+		updateList();
 	}
 	
 	@Override
@@ -491,6 +485,7 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 			/**
 			 * Reset filterDex to new set of Pokemon to display
 			 */
+			@SuppressWarnings("unchecked")
 			@Override
 			protected void publishResults(CharSequence str, FilterResults results) {
 				filterDex.clear();

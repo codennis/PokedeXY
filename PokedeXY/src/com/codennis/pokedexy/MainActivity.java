@@ -69,7 +69,6 @@ public class MainActivity extends Activity implements TabListener {
 	protected void onResume() {
 		super.onResume();
 		adapter.updatePokedex();
-		adapter.getFilter().filter(null);
 	}
 
 	protected void showData() {
@@ -113,7 +112,6 @@ public class MainActivity extends Activity implements TabListener {
 		
 		c.close();
 
-		final CheckedTextView filterCheck = (CheckedTextView) findViewById(R.id.filterCheck);
 		adapter = new PokedexAdapter(this, pokedex, (TextView) findViewById(R.id.counter));
 		adapter.updateHeader(findViewById(android.R.id.content));
 		pokedexList.setTextFilterEnabled(true);

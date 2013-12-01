@@ -26,8 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static String DB_NAME = "pokedex";
 	private SQLiteDatabase database;
 	public final Context context;
-	private boolean isOpen = false;
-	private static int VERSION = 9;
+	private static int VERSION = 10;
 	
 	private Map<Integer,Integer> caught = new HashMap<Integer,Integer>();
 	
@@ -89,9 +88,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	// Copy database from file
 	private void copyDatabase() throws IOException {
 		InputStream iStream = context.getAssets().open(DB_NAME);
-		Log.i("COPY","istreamed");
 		OutputStream oStream = new FileOutputStream(DB_PATH + DB_NAME);
-		Log.i("COPY","ostreamed");
 		
 		byte[] buffer = new byte[1024];
 		int bytesRead;
@@ -104,8 +101,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	// Open database for read/write
 	public SQLiteDatabase openDatabase() throws SQLException {
-		String path = DB_PATH + DB_NAME;
-		Log.i("opening","database");
 		database = this.getWritableDatabase();
 		return database;
 	}
@@ -120,19 +115,15 @@ public class DBHelper extends SQLiteOpenHelper {
 	
     @Override
     public void onCreate(SQLiteDatabase db) {
-    	Log.i("CREATE","ON");
     	createDatabase();
     }
     
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    	Log.i("Upgrading", "FROM " + oldVersion + " to " + newVersion);
     	updateDatabase(db);
-		Log.i("Upgrading", "Added table");
     }
     
     private void updateDatabase(SQLiteDatabase db) {
-
     	// Copy data from existing DB
 		String query = "SELECT _id, caught FROM pokedex";
 		Cursor c = db.rawQuery(query,null);
@@ -144,22 +135,18 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 		c.close();
     	
-		Log.i("update", "setcaught");
 		try {
-			Log.i("COPY","COPIED");
 			copyDatabase();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	Log.i("updating","database");
+
 		ContentValues vals;
 		for (Map.Entry entry:caught.entrySet()) {
 			vals = new ContentValues();
 			vals.put("caught", (Integer)entry.getValue());
-			database.update("pokedex", vals, "_id = " + (Integer)entry.getKey(),null);
-			Log.i("updating",(Integer)entry.getKey() + " " + (Integer)entry.getValue());
-			
+			db.update("pokedex", vals, "_id = " + (Integer)entry.getKey(),null);
 		}
 		close();
     	

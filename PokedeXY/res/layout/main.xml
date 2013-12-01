@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_dark"
+    android:background="#191919"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -33,7 +33,7 @@
         android:layout_alignBaseline="@+id/filterCheck"
         android:layout_alignBottom="@+id/filterCheck"
         android:layout_alignLeft="@+id/nationalDex"
-        android:layout_marginBottom="18dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="15dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/background_light" />
@@ -44,15 +44,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/nationalDex"
-        android:layout_marginBottom="18dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginRight="15dp"
-        android:drawable="@android:color/background_light"
-        android:text="@string/filter_caught"
-        android:gravity="center_vertical"
-        android:clickable="true"
-        android:checked="false"
-        android:focusable="true"
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-        android:textColor="@android:color/background_light" />
+        android:checked="false"
+        android:clickable="true"
+        android:drawable="@android:color/background_light"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:text="@string/filter_caught"
+        android:textColor="@android:color/background_light"
+        android:textColorLink="@android:color/background_light" />
 
 </RelativeLayout>

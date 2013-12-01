@@ -62,7 +62,9 @@ public class Pokemon {
 	}
 	public String getNIDString() {
 		String textID;
-		if (nID < 10)
+		if (nID <= 0)
+			textID = "";
+		else if (nID < 10)
 			textID = "00" + nID;
 		else if (nID < 100)
 			textID = "0" + nID;
@@ -80,7 +82,9 @@ public class Pokemon {
 	}
 	public String getKIDString() {
 		String textID;
-		if (kID < 10)
+		if (kID <= 0)
+			textID = "";
+		else if (kID < 10)
 			textID = "00" + kID;
 		else if (kID < 100)
 			textID = "0" + kID;
