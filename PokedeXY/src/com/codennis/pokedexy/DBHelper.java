@@ -57,12 +57,12 @@ public class DBHelper extends SQLiteOpenHelper {
 	public void createDatabase() {
 		boolean dbExists = checkDatabase();
 		if (!dbExists) {
-			Log.i("going","tocopy");
+			this.getReadableDatabase();
 			try {
 				copyDatabase();
 			} catch (IOException e) {
 				//Log.e(this.getClass().toString(), "Copy error");
-				throw new Error ("Error copying database");
+				throw new RuntimeException(e);
 			}
 		} else {
 			Log.i(this.getClass().toString(),"Database already exists");
@@ -89,7 +89,9 @@ public class DBHelper extends SQLiteOpenHelper {
 	// Copy database from file
 	private void copyDatabase() throws IOException {
 		InputStream iStream = context.getAssets().open(DB_NAME);
+		Log.i("COPY","istreamed");
 		OutputStream oStream = new FileOutputStream(DB_PATH + DB_NAME);
+		Log.i("COPY","ostreamed");
 		
 		byte[] buffer = new byte[1024];
 		int bytesRead;
