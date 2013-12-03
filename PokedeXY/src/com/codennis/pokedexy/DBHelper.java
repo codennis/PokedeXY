@@ -26,7 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static String DB_NAME = "pokedex";
 	private SQLiteDatabase database;
 	public final Context context;
-	private static int VERSION = 10;
+	private static int VERSION = 3;
 	
 	private Map<Integer,Integer> caught = new HashMap<Integer,Integer>();
 	
@@ -43,7 +43,6 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	DBHelper(Context context) {
 		super(context, DB_NAME ,null,VERSION);
-		Log.i("DB","Constructor");
 		this.context = context;
 		
 		String packageName = context.getPackageName();
@@ -54,6 +53,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	// Create database if not yet created
 	public void createDatabase() {
+		Log.i("Creating", "database");
 		boolean dbExists = checkDatabase();
 		if (!dbExists) {
 			this.getReadableDatabase();
@@ -70,7 +70,6 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	// Check if database already exists
 	private boolean checkDatabase() {
-		Log.i("Checking" , "database");
 		SQLiteDatabase checkDb = null;
 		try {
 			String path = DB_PATH + DB_NAME;
@@ -87,6 +86,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	// Copy database from file
 	private void copyDatabase() throws IOException {
+		Log.i("Copying", "Database");
 		InputStream iStream = context.getAssets().open(DB_NAME);
 		OutputStream oStream = new FileOutputStream(DB_PATH + DB_NAME);
 		
@@ -101,6 +101,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	// Open database for read/write
 	public SQLiteDatabase openDatabase() throws SQLException {
+		Log.i("opening", "database");
 		database = this.getWritableDatabase();
 		return database;
 	}
@@ -115,11 +116,13 @@ public class DBHelper extends SQLiteOpenHelper {
 	
     @Override
     public void onCreate(SQLiteDatabase db) {
-    	createDatabase();
+    	Log.i("ON","CREATE");
+    	//createDatabase();
     }
     
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    	Log.i("ON","UPGRADE");
     	updateDatabase(db);
     }
     
