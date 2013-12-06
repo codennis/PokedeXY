@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_dark"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" >
+    
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/evoList"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="8dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/background_light" />
+
+    <TextView
+        android:id="@+id/kalos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/name"
+        android:layout_below="@+id/name"
+        android:paddingTop="12dp"
+        android:paddingLeft="8dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/background_light" />
+        
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       	android:layout_above="@+id/location"
+       	android:layout_centerHorizontal="true"  >
+        
+	    <TextView
+	        android:id="@+id/safari"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:paddingBottom="4dp"
+	        android:layout_weight="1"
+	        android:text="Friend Safari"
+	        android:paddingLeft="8dp"
+	        android:paddingTop="4dp"
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:textColor="@android:color/background_light" />
+	    
+	    <ListView
+	        android:id="@+id/safari_list"
+	        android:layout_width="0dp"
+	        android:layout_height="84dp"
+	        android:layout_weight="1">
+	    </ListView>
+    </LinearLayout>
+    
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/name"
+        android:layout_above="@+id/location_list"
+        android:paddingTop="24dp"
+        android:paddingBottom="4dp"
+        android:paddingLeft="8dp"
+        android:text="Locations"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/background_light" />
+    
+    <TextView
+        android:id="@+id/exclusive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/location_list"
+        android:layout_above="@+id/location_list"
+        android:paddingTop="24dp"
+        android:paddingBottom="4dp"
+        android:paddingRight="8dp"
+        android:gravity="right"
+        android:text="Exclusive to"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/background_light" />
+    
+    <ListView
+        android:id="@+id/location_list"
+        android:layout_width="match_parent"
+        android:layout_height="84dp"
+        android:layout_alignLeft="@+id/location"
+        android:layout_above="@+id/evo"
+        android:layout_centerHorizontal="true" >
+    </ListView>
+
+    <TextView
+        android:id="@+id/evo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/head"
+        android:layout_centerHorizontal="true"
+        android:padding="8dp"
+        android:text="Evolutions"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/background_light" />
+    
+    <include
+        android:id="@+id/head"
+        layout="@layout/header"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_above="@+id/evoList"
+        android:layout_alignLeft="@+id/evoList"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp" />
+    
+    <ListView
+        android:id="@+id/evoList"
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp" >
+    </ListView>
+    
+    
+</RelativeLayout>

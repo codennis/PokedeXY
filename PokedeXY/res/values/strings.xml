@@ -4,5 +4,6 @@
     <string name="app_name">PokedeXY</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-
+    <string name="filter_caught">Filter Caught</string>
+    
 </resources>
