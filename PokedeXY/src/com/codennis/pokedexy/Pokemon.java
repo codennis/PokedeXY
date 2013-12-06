@@ -126,6 +126,8 @@ public class Pokemon {
 	}
 	
 	public Pair getSafari(int i) {
+		if (i >= safari.size())
+			return null;
 		return safari.get(i);
 	}
 	public void setWhichSaf(int i) {

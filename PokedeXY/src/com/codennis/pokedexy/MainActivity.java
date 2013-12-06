@@ -7,16 +7,24 @@ import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckedTextView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 /**
  * @author codennis
@@ -30,6 +38,7 @@ public class MainActivity extends Activity implements TabListener {
 	private SQLiteDatabase db;
 	private PokedexAdapter adapter;
 	private ListView pokedexList;
+	private EditText search;
 	private String kalos;
 	
 	/* (non-Javadoc)
@@ -63,12 +72,41 @@ public class MainActivity extends Activity implements TabListener {
 			}
 		});
 		
+		search =  (EditText) findViewById(R.id.search);
+		TextWatcher tw = new TextWatcher() {
+			@Override
+			public void afterTextChanged(Editable edit) {
+				adapter.setSearch(edit.toString());
+			}
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+			}
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+			}
+		};
+		search.addTextChangedListener(tw);
+		search.setOnEditorActionListener(new OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_DONE) {
+					search.clearFocus();
+					InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
+				}
+				return false;
+			}
+		});
+
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		adapter.updatePokedex();
+		search.clearFocus();
 	}
 
 	protected void showData() {

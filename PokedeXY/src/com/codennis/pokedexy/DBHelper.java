@@ -26,7 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static String DB_NAME = "pokedex";
 	private SQLiteDatabase database;
 	public final Context context;
-	private static int VERSION = 3;
+	private static int VERSION = 6;
 	
 	private Map<Integer,Integer> caught = new HashMap<Integer,Integer>();
 	
@@ -74,6 +74,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		try {
 			String path = DB_PATH + DB_NAME;
 			checkDb = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
+			//Log.i("CHECKED","DATABASE");
 		} catch (SQLException e) {
 			Log.e(this.getClass().toString(), "Error while checking database");
 		}
@@ -86,7 +87,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	// Copy database from file
 	private void copyDatabase() throws IOException {
-		Log.i("Copying", "Database");
+		//Log.i("Copying", "Database");
 		InputStream iStream = context.getAssets().open(DB_NAME);
 		OutputStream oStream = new FileOutputStream(DB_PATH + DB_NAME);
 		
@@ -101,8 +102,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	// Open database for read/write
 	public SQLiteDatabase openDatabase() throws SQLException {
-		Log.i("opening", "database");
 		database = this.getWritableDatabase();
+		//Log.i("OPEN",database.getVersion() + "");
 		return database;
 	}
 	
@@ -116,13 +117,13 @@ public class DBHelper extends SQLiteOpenHelper {
 	
     @Override
     public void onCreate(SQLiteDatabase db) {
-    	Log.i("ON","CREATE");
+    	//Log.i("ON","CREATE");
     	//createDatabase();
     }
     
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    	Log.i("ON","UPGRADE");
+    	//Log.i("ON","UPGRADE");
     	updateDatabase(db);
     }
     
@@ -151,7 +152,6 @@ public class DBHelper extends SQLiteOpenHelper {
 			vals.put("caught", (Integer)entry.getValue());
 			db.update("pokedex", vals, "_id = " + (Integer)entry.getKey(),null);
 		}
-		close();
     	
     }
 }

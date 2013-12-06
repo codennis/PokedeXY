@@ -26,35 +26,36 @@ public final class R {
         public static final int pokecheck=0x7f020002;
     }
     public static final class id {
-        public static final int action_settings=0x7f08001c;
+        public static final int action_settings=0x7f08001d;
         public static final int counter=0x7f08000c;
-        public static final int evo=0x7f08001b;
-        public static final int evoList=0x7f080014;
-        public static final int exclusive=0x7f08001a;
-        public static final int filterCheck=0x7f08000b;
-        public static final int green=0x7f08000d;
-        public static final int head=0x7f080009;
+        public static final int evo=0x7f08001c;
+        public static final int evoList=0x7f080015;
+        public static final int exclusive=0x7f08001b;
+        public static final int filterCheck=0x7f08000d;
+        public static final int green=0x7f08000e;
+        public static final int head=0x7f08000a;
         public static final int header_first=0x7f080001;
         public static final int header_fourth=0x7f080004;
         public static final int header_second=0x7f080002;
         public static final int header_third=0x7f080003;
-        public static final int kalos=0x7f080015;
+        public static final int kalos=0x7f080016;
         public static final int linearHeader=0x7f080000;
         public static final int loc_first=0x7f080006;
         public static final int loc_second=0x7f080007;
         public static final int loc_third=0x7f080008;
-        public static final int location=0x7f080016;
+        public static final int location=0x7f080017;
         public static final int location_layout=0x7f080005;
-        public static final int location_list=0x7f080019;
-        public static final int name=0x7f080013;
-        public static final int nationalDex=0x7f08000a;
-        public static final int rowLayout=0x7f08000e;
-        public static final int row_first=0x7f08000f;
-        public static final int row_fourth=0x7f080012;
-        public static final int row_second=0x7f080010;
-        public static final int row_third=0x7f080011;
-        public static final int safari=0x7f080017;
-        public static final int safari_list=0x7f080018;
+        public static final int location_list=0x7f08001a;
+        public static final int name=0x7f080014;
+        public static final int nationalDex=0x7f08000b;
+        public static final int rowLayout=0x7f08000f;
+        public static final int row_first=0x7f080010;
+        public static final int row_fourth=0x7f080013;
+        public static final int row_second=0x7f080011;
+        public static final int row_third=0x7f080012;
+        public static final int safari=0x7f080018;
+        public static final int safari_list=0x7f080019;
+        public static final int search=0x7f080009;
     }
     public static final class layout {
         public static final int header=0x7f030000;

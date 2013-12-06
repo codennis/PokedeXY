@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-//import android.util.Log;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,6 +35,7 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 	private boolean hideCaught;
 	private String evoSeries;
 	private int kalos;
+	private String search;
 	
 	private ViewTreeObserver vto;
 	private TextView txtCounter;
@@ -54,6 +55,7 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 		hideCaught = false;
 		evoSeries = null;
 		kalos = 0;
+		search = null;
 	}
 
 	public PokedexAdapter(Context context, ArrayList<Pokemon> pokedex, TextView txtCounter) {
@@ -66,6 +68,7 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 		evoSeries = null;
 		kalos = 0;
 		this.txtCounter = txtCounter;
+		search = null;
 	}
 
 	@Override
@@ -116,6 +119,11 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 		else if (kalos == "Safari")
 			this.kalos = 4;
 		updateList();
+	}
+	
+	public void setSearch(String search) {
+		this.search = search;
+		this.getFilter().filter(search);
 	}
 	
 	public void updateHeader(View view) {
@@ -384,7 +392,7 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 	}
 	
 	protected void updateList() {
-		this.getFilter().filter(null);
+		this.getFilter().filter(search);
 	}
 	
 	// Updates arrayList to reflect new caught values
@@ -415,36 +423,39 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 			protected FilterResults performFiltering(CharSequence str) {
 				Cursor c;
 				String query = "SELECT _id, kalos, k_id, name, caught, evo_series, evo_lvl, evo_how, depth FROM pokedex WHERE 1=1";
-				// Query database for filter preference
-				if (str==null) {
-					if (getEvoSeries() != null) {
-						query += " AND evo_series=?";
-						query += " ORDER BY depth";
+				String where = "";
+				String order = "";
+				// Filter for evolutions
+				if (getEvoSeries() != null) {
+					where += " AND evo_series=?";
+					order += " ORDER BY depth";
+				}
+				else {
+					if(hideCaught())
+						where += " AND caught=0";
+					if (getKalos() == 4)
+					{
+						query = "SELECT _id, kalos, k_id, name, caught, evo_series, evo_lvl, evo_how, depth, safari, slot FROM " +
+								"safari NATURAL JOIN pokedex WHERE 1=1";
+						if (hideCaught())
+							where += " AND caught=0";
+						order += " ORDER BY safari, slot ";
 					}
-					else {
-						if(hideCaught())
-							query += " AND caught=0";
-						if (getKalos() == 4)
-						{
-							query = "SELECT _id, kalos, k_id, name, caught, evo_series, evo_lvl, evo_how, depth, safari, slot FROM " +
-									"safari NATURAL JOIN pokedex WHERE 1=1";
-							if (hideCaught())
-								query += " AND caught=0";
-							query += " ORDER BY safari, slot ";
-						}
-						else if (getKalos() > 0)
-						{
-							query += " AND kalos=" + getKalos();
-							query += " ORDER BY k_id";
-						}
+					else if (getKalos() > 0)
+					{
+						where += " AND kalos=" + getKalos();
+						order += " ORDER BY k_id";
+					}
+					// Filter by name search
+					if (str != null) {
+						where += " AND name LIKE '%" + str + "%'";
 					}
 				}
-				// Filter by name search
 				
 				if (getEvoSeries() != null)
-					c = db.rawQuery(query, new String[] { getEvoSeries() });
+					c = db.rawQuery(query + where + order, new String[] { getEvoSeries() });
 				else
-					c = db.rawQuery(query, null);
+					c = db.rawQuery(query + where + order, null);
 				
 
 				// Store filtered set of Pokemon into FilterResults
