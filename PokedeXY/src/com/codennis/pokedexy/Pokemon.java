@@ -1,10 +1,7 @@
 package com.codennis.pokedexy;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 

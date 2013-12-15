@@ -9,27 +9,41 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin" >
     
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/evoList"
-        android:layout_alignParentTop="true"
-        android:paddingLeft="8dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/background_light" />
-
-    <TextView
-        android:id="@+id/kalos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/name"
-        android:layout_below="@+id/name"
-        android:paddingTop="12dp"
-        android:paddingLeft="8dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/background_light" />
-        
+       	android:layout_alignParentTop="true" >
+       	
+	    <ImageView
+	        android:id="@+id/pokeImg"
+	        android:layout_width="0dp"
+	        android:layout_height="128dp"
+	        android:layout_weight="1"
+	        android:scaleType="fitXY" />
+	    
+	    <LinearLayout
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:orientation="vertical" >
+	        
+		    <TextView
+		        android:id="@+id/name"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textAppearance="?android:attr/textAppearanceLarge"
+		        android:textColor="@android:color/background_light" />
+		
+		    <TextView
+		        android:id="@+id/kalos"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:paddingTop="12dp"
+		        android:textAppearance="?android:attr/textAppearanceMedium"
+		        android:textColor="@android:color/background_light" />
+    	</LinearLayout>
+    </LinearLayout>
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,14 +59,15 @@
 	        android:text="Friend Safari"
 	        android:paddingLeft="8dp"
 	        android:paddingTop="4dp"
-	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:textAppearance="?android:attr/textAppearanceMedium"
 	        android:textColor="@android:color/background_light" />
 	    
 	    <ListView
-	        android:id="@+id/safari_list"
+	        android:id="@+id/safariList"
 	        android:layout_width="0dp"
 	        android:layout_height="84dp"
-	        android:layout_weight="1">
+	        android:layout_weight="1" >
+
 	    </ListView>
     </LinearLayout>
     
@@ -60,9 +75,9 @@
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/name"
-        android:layout_above="@+id/location_list"
-        android:paddingTop="24dp"
+        android:layout_alignLeft="@+id/locationList"
+        android:layout_above="@+id/locationList"
+        android:paddingTop="8dp"
         android:paddingBottom="4dp"
         android:paddingLeft="8dp"
         android:text="Locations"
@@ -73,9 +88,9 @@
         android:id="@+id/exclusive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/location_list"
-        android:layout_above="@+id/location_list"
-        android:paddingTop="24dp"
+        android:layout_alignRight="@+id/locationList"
+        android:layout_above="@+id/locationList"
+        android:paddingTop="8dp"
         android:paddingBottom="4dp"
         android:paddingRight="8dp"
         android:gravity="right"
@@ -84,12 +99,13 @@
         android:textColor="@android:color/background_light" />
     
     <ListView
-        android:id="@+id/location_list"
+        android:id="@+id/locationList"
         android:layout_width="match_parent"
         android:layout_height="84dp"
-        android:layout_alignLeft="@+id/location"
         android:layout_above="@+id/evo"
+        android:layout_alignLeft="@+id/evoList"
         android:layout_centerHorizontal="true" >
+
     </ListView>
 
     <TextView
@@ -116,11 +132,11 @@
     <ListView
         android:id="@+id/evoList"
         android:layout_width="match_parent"
-        android:layout_height="128dp"
+        android:layout_height="108dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="12dp" >
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp" >
     </ListView>
-    
     
 </RelativeLayout>

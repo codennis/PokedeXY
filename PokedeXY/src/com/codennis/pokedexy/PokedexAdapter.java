@@ -38,8 +38,8 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 	private String search;
 	
 	private ViewTreeObserver vto;
+	private OnGlobalLayoutListener globListener;
 	private TextView txtCounter;
-	
 	
 	/**
 	 * Default constructor for main Pokedex listings.
@@ -199,6 +199,8 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 		if (position >= filterDex.size())
 			return null;
 		
+		//Log.i("Position", position + "");
+		
 		Pokemon tempPoke = filterDex.get(position);
 		int whichSaf = tempPoke.getWhichSaf();
 		final Pokemon poke = pokedex.get(tempPoke.getNID()-1);
@@ -223,18 +225,21 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 
 		// Global layout listener to keep rows correct colors
 		final View green = view.findViewById(R.id.green);
-		//int width = (poke.getCaught() ? ((View) green.getParent()).getMeasuredWidth() : 0);
-		//green.getLayoutParams().width = width;
 		vto = view.getViewTreeObserver();
-		vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+
+		int width = (poke.getCaught() ? ((View) green.getParent()).getMeasuredWidth() : 0);
+		green.getLayoutParams().width = width;
+		green.getLayoutParams().height = ((View) green.getParent()).getMeasuredHeight();
+		/*
+		globListener = new OnGlobalLayoutListener() {
 			@Override
 			public void onGlobalLayout() {
-				int width = (poke.getCaught() ? ((View) green.getParent()).getMeasuredWidth() : 0);
-				green.getLayoutParams().width = width;
-				green.getLayoutParams().height = ((View) green.getParent()).getMeasuredHeight();
+				Log.i("GREEN","POSITION" + position + " " +  green.getMeasuredWidth() + " x " + green.getMeasuredHeight());
 				green.requestLayout();
 			}
-		});
+		};
+		vto.addOnGlobalLayoutListener(globListener);
+		*/
 		
 		// Set swipe listener to animate sliding green on swipe
 		view.setOnTouchListener(new OnSwipeListener(mInflater.getContext(), view) {
@@ -259,7 +264,7 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 				
 			@Override
 			public boolean onTap() {
-		    	Intent i = new Intent(context, PokemonActivity.class);
+		    	Intent i = new Intent(context, PokemonFragActivity.class);
 		    	i.putExtra("poke_id",pkmn.getNID());
 		    	context.startActivity(i);
 		    	return true;
@@ -321,26 +326,26 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 	private void drag(final View v, float initX, MotionEvent e, boolean caught) {
 		final int width = v.getMeasuredWidth();
 		final View green = v.findViewById(R.id.green);
-		float diff = e.getX() - initX;
-		if (!caught && diff > 0)
-			green.getLayoutParams().width = (int)diff;
-		else if (caught && diff < 0)
-			green.getLayoutParams().width = width + (int)diff;
+		float diffX = e.getX() - initX;
+		if (!caught && diffX > 0)
+			green.getLayoutParams().width = (int)diffX;
+		else if (caught && diffX < 0)
+			green.getLayoutParams().width = width + (int)diffX;
+		green.getLayoutParams().height = v.getMeasuredHeight();
+		green.requestLayout();
 	}
 	
 	private void finishAnim(final View v, float initX, float downTime, MotionEvent me, final Pokemon poke) {
 		final int width = v.getMeasuredWidth();
 		final View green = v.findViewById(R.id.green);
-		final float diff = me.getX() - initX;
+		final int greenWidth = green.getLayoutParams().width;
+		final float diffX = me.getX() - initX;
 		long time = (long) (me.getEventTime() - downTime);
-		final float speed = Math.abs(diff/time);
-		
-		if ((poke.getCaught() && diff > 0) || (!poke.getCaught() && diff < 0))
-			return;
-		
-		if (!poke.getCaught() && ((diff > width/3) || speed > 1))
+		final float speed = diffX/time;
+
+		if (!poke.getCaught() && ((diffX > width/3) || speed > 1))
 			poke.setCaught(true);
-		else if (poke.getCaught() && ((diff < -width/3) || speed > 1))
+		else if (poke.getCaught() && ((diffX < -width/3) || speed < -1))
 			poke.setCaught(false);
 		
 		// Set up animation listener
@@ -362,17 +367,12 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 			@Override
 			protected void applyTransformation(float time, Transformation t) {
 				if (poke.getCaught()) {
-					if (diff > width/3 || speed > 1) // Animate getting caught
-						green.getLayoutParams().width = (int) (diff + (width - diff)*time);
-					else // Cancelling uncaught
-						green.getLayoutParams().width = (int) (width + diff - diff* time);
+					green.getLayoutParams().width = (int) (greenWidth + (width - greenWidth) * time);
 				} else {
-					if (diff < -width/3 || speed > 1) { // Animate uncaught
-						green.getLayoutParams().width = (int) (width + diff - (width + diff)*time);
-					} else { // Cancelling caught
-						green.getLayoutParams().width = (int) (diff - diff * time);
-					}
+					green.getLayoutParams().width = (int) (greenWidth - greenWidth * time);
 				}
+				green.getLayoutParams().height = v.getMeasuredHeight();
+				green.requestLayout();
 			}
 			@Override
 			public boolean willChangeBounds() {
@@ -400,6 +400,9 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 		String query = "SELECT _id, caught FROM pokedex";
 		Cursor c = db.rawQuery(query,null);
 		c.moveToFirst();
+		for(Pokemon poke:pokedex) {
+			//Log.i("UPDATE",poke.getName());
+		}
 		if (!c.isAfterLast()) {
 			do {
 				pokedex.get(c.getInt(0)-1).setCaught(c.getInt(1));

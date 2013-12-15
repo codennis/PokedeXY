@@ -17,7 +17,7 @@
         android:id="@+id/rowLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp" >
+        android:padding="6dp" >
 
         <TextView
             android:id="@+id/row_first"
