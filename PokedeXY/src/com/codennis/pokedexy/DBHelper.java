@@ -26,7 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static String DB_NAME = "pokedex";
 	private SQLiteDatabase database;
 	public final Context context;
-	private static int VERSION = 2;
+	private static int VERSION = 6;
 	
 	private Map<Integer,Integer> caught = new HashMap<Integer,Integer>();
 	
@@ -57,7 +57,6 @@ public class DBHelper extends SQLiteOpenHelper {
 		boolean dbExists = checkDatabase();
 		if (!dbExists) {
 			this.getReadableDatabase();
-
 			try {
 				copyDatabase();
 			} catch (IOException e) {
@@ -74,11 +73,9 @@ public class DBHelper extends SQLiteOpenHelper {
 		SQLiteDatabase checkDb = null;
 		try {
 			String path = DB_PATH + DB_NAME;
-			Log.i("UH",path);
 			checkDb = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
-			Log.i("CHECKED","DATABASE");
+			//Log.i("CHECKED","DATABASE");
 		} catch (SQLException e) {
-			Log.i("CAUGHT","EXCEPTION");
 			Log.e(this.getClass().toString(), "Error while checking database");
 		}
 		
@@ -90,7 +87,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	// Copy database from file
 	private void copyDatabase() throws IOException {
-		Log.i("Copying", "Database");
+		//Log.i("Copying", "Database");
 		InputStream iStream = context.getAssets().open(DB_NAME);
 		OutputStream oStream = new FileOutputStream(DB_PATH + DB_NAME);
 		
@@ -99,7 +96,6 @@ public class DBHelper extends SQLiteOpenHelper {
 		while ((bytesRead = iStream.read(buffer)) > 0) {
 			oStream.write(buffer, 0, bytesRead);
 		}
-		oStream.flush();
 		oStream.close();
 		iStream.close();
 	}
@@ -107,7 +103,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	// Open database for read/write
 	public SQLiteDatabase openDatabase() throws SQLException {
 		database = this.getWritableDatabase();
-		Log.i("OPEN",database.getVersion() + "");
+		//Log.i("OPEN",database.getVersion() + "");
 		return database;
 	}
 	
@@ -121,13 +117,13 @@ public class DBHelper extends SQLiteOpenHelper {
 	
     @Override
     public void onCreate(SQLiteDatabase db) {
-		Log.i("ON", "CREATE");
-		//createDatabase();
+    	//Log.i("ON","CREATE");
+    	//createDatabase();
     }
     
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.i("ON", "UPDATE");
+    	//Log.i("ON","UPGRADE");
     	updateDatabase(db);
     }
     
@@ -142,11 +138,11 @@ public class DBHelper extends SQLiteOpenHelper {
 			} while (c.moveToNext());
 		}
 		c.close();
-		
+    	
 		try {
 			copyDatabase();
 		} catch (IOException e) {
-			Log.i("ERROR",e.toString());
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

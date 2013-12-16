@@ -12,63 +12,63 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-       	android:layout_alignParentTop="true" >
-       	
-	    <ImageView
-	        android:id="@+id/pokeImg"
-	        android:layout_width="0dp"
-	        android:layout_height="128dp"
-	        android:layout_weight="1"
-	        android:scaleType="fitXY" />
-	    
-	    <LinearLayout
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:orientation="vertical" >
-	        
-		    <TextView
-		        android:id="@+id/name"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textAppearance="?android:attr/textAppearanceLarge"
-		        android:textColor="@android:color/background_light" />
-		
-		    <TextView
-		        android:id="@+id/kalos"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:paddingTop="12dp"
-		        android:textAppearance="?android:attr/textAppearanceMedium"
-		        android:textColor="@android:color/background_light" />
-    	</LinearLayout>
+               android:layout_alignParentTop="true" >
+               
+            <ImageView
+                android:id="@+id/pokeImg"
+                android:layout_width="0dp"
+                android:layout_height="128dp"
+                android:layout_weight="1"
+                android:scaleType="fitXY" />
+            
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+                
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="@android:color/background_light" />
+                
+                    <TextView
+                        android:id="@+id/kalos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="12dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@android:color/background_light" />
+            </LinearLayout>
     </LinearLayout>
     
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-       	android:layout_above="@+id/location"
-       	android:layout_centerHorizontal="true"  >
+               android:layout_above="@+id/location"
+               android:layout_centerHorizontal="true"  >
         
-	    <TextView
-	        android:id="@+id/safari"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:paddingBottom="4dp"
-	        android:layout_weight="1"
-	        android:text="Friend Safari"
-	        android:paddingLeft="8dp"
-	        android:paddingTop="4dp"
-	        android:textAppearance="?android:attr/textAppearanceMedium"
-	        android:textColor="@android:color/background_light" />
-	    
-	    <ListView
-	        android:id="@+id/safariList"
-	        android:layout_width="0dp"
-	        android:layout_height="84dp"
-	        android:layout_weight="1" >
+            <TextView
+                android:id="@+id/safari"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="4dp"
+                android:layout_weight="1"
+                android:text="Friend Safari"
+                android:paddingLeft="8dp"
+                android:paddingTop="4dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/background_light" />
+            
+            <ListView
+                android:id="@+id/safariList"
+                android:layout_width="0dp"
+                android:layout_height="84dp"
+                android:layout_weight="1" >
 
-	    </ListView>
+            </ListView>
     </LinearLayout>
     
     <TextView
@@ -132,7 +132,7 @@
     <ListView
         android:id="@+id/evoList"
         android:layout_width="match_parent"
-        android:layout_height="108dp"
+        android:layout_height="112dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"

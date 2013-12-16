@@ -2,23 +2,22 @@ package com.codennis.pokedexy;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class PokemonFrag extends Fragment {
+public class PokemonActivity extends Activity {
 	private Pokemon poke;
 	private SQLiteDatabase db;
 	private ArrayList<Pokemon> pokedex;
@@ -27,14 +26,15 @@ public class PokemonFrag extends Fragment {
 	private PokedexAdapter adapter;
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		View v = inflater.inflate(R.layout.pokemon, null);
+		setContentView(R.layout.pokemon);
 
-		DBHelper dbh = DBHelper.getInstance(this.getActivity());
+		DBHelper dbh = DBHelper.getInstance(this);
 		db = dbh.getDb();
-		Intent i = this.getActivity().getIntent();
+		Intent i = getIntent();
 		int id = i.getExtras().getInt("poke_id");
+
 		String query = "SELECT _id, kalos, k_id, name, caught, evo_series, evo_lvl, evo_how, depth FROM pokedex";
 		Cursor c = db.rawQuery(query + " WHERE _id=" + id,null);
 		c.moveToFirst();
@@ -42,7 +42,7 @@ public class PokemonFrag extends Fragment {
 			poke = new Pokemon(c.getInt(0),c.getInt(1),c.getInt(2),c.getString(3),
 					c.getInt(4),c.getString(5),c.getInt(6),c.getString(7),c.getInt(8));
 		else {
-			return v;
+			return;
 		}
 		c.close();
 
@@ -57,37 +57,28 @@ public class PokemonFrag extends Fragment {
 		}
 		c.close();
 		
-		updateDetails(v);
-		updateHeader(v);
+		updateDetails(findViewById(android.R.id.content));
+		updateHeader(findViewById(android.R.id.content));
 		
-		ListView evoList = (ListView) v.findViewById(R.id.evoList);
-		adapter = new PokedexAdapter(this.getActivity(), pokedex);
-		adapter.setEvo(poke.getEvoSeries());
+		ListView evoList = (ListView) findViewById(R.id.evoList);
 		evoList.setTextFilterEnabled(true);
+		adapter = new PokedexAdapter(this, pokedex);
+		adapter.setEvo(poke.getEvoSeries());
 		evoList.setAdapter(adapter);
-		adapter.updateList();
-		
-		ImageView img = (ImageView) v.findViewById(R.id.pokeImg);
-		String imgName = "_"+poke.getNIDString();
-		int resID = getResources().getIdentifier(imgName, "drawable", getActivity().getPackageName());
-		img.setImageResource(resID);
-		
-		return v;
 	}
 
 	@Override
-	public void onResume() {
+	protected void onResume() {
 		super.onResume();
-		if (adapter != null)
-			adapter.updatePokedex();
+		adapter.updatePokedex();
 	}
 	
 	private void updateDetails(View view) {
 
-		final TextView viewName = (TextView) view.findViewById(R.id.name);
-		final TextView viewKalos = (TextView) view.findViewById(R.id.kalos);
-		final ListView viewLocation = (ListView) view.findViewById(R.id.locationList);
-		final ListView viewSafari = (ListView) view.findViewById(R.id.safariList);
+		final TextView viewName = (TextView) findViewById(R.id.name);
+		final TextView viewKalos = (TextView) findViewById(R.id.kalos);
+		final ListView viewLocation = (ListView) findViewById(R.id.locationList);
+		final ListView viewSafari = (ListView) findViewById(R.id.safariList);
 		
 		String tempText, textID = "";
 		viewName.setText(poke.getNIDString() + " " + poke.getName());
@@ -108,13 +99,13 @@ public class PokemonFrag extends Fragment {
 		viewKalos.setText(tempText + poke.getKIDString());
 		
 		locationList = new ArrayList<Trip<String, String, String>>();
-		TriplesAdapter adapter = new TriplesAdapter(this.getActivity());
+		TriplesAdapter adapter = new TriplesAdapter(this);
 		updateLocations();
 		adapter.addAll(locationList);
 		viewLocation.setAdapter(adapter);
 		
 		safariList = new ArrayList<Trip<String,String,String>>();
-		TriplesAdapter safAdapter = new TriplesAdapter(this.getActivity());
+		TriplesAdapter safAdapter = new TriplesAdapter(this);
 		updateSafari();
 		safAdapter.addAll(safariList);
 		viewSafari.setAdapter(safAdapter);

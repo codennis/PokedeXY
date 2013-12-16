@@ -38,8 +38,8 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 	private String search;
 	
 	private ViewTreeObserver vto;
-	private OnGlobalLayoutListener globListener;
 	private TextView txtCounter;
+	
 	
 	/**
 	 * Default constructor for main Pokedex listings.
@@ -199,8 +199,6 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 		if (position >= filterDex.size())
 			return null;
 		
-		//Log.i("Position", position + "");
-		
 		Pokemon tempPoke = filterDex.get(position);
 		int whichSaf = tempPoke.getWhichSaf();
 		final Pokemon poke = pokedex.get(tempPoke.getNID()-1);
@@ -225,21 +223,28 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 
 		// Global layout listener to keep rows correct colors
 		final View green = view.findViewById(R.id.green);
-		vto = view.getViewTreeObserver();
-
-		int width = (poke.getCaught() ? ((View) green.getParent()).getMeasuredWidth() : 0);
-		green.getLayoutParams().width = width;
-		green.getLayoutParams().height = ((View) green.getParent()).getMeasuredHeight();
 		/*
-		globListener = new OnGlobalLayoutListener() {
-			@Override
-			public void onGlobalLayout() {
-				Log.i("GREEN","POSITION" + position + " " +  green.getMeasuredWidth() + " x " + green.getMeasuredHeight());
-				green.requestLayout();
-			}
-		};
-		vto.addOnGlobalLayoutListener(globListener);
+		int width = poke.getCaught() ? view.getWidth() : 0;
+		green.getLayoutParams().width = width;
+		green.getLayoutParams().height = view.getHeight();
+		green.requestLayout();
 		*/
+		
+		vto = view.getViewTreeObserver();
+		if (vto.isAlive()) {
+			vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+				@Override
+				public void onGlobalLayout() {
+					if (vto.isAlive())
+						vto.removeGlobalOnLayoutListener(this);
+					int width = (poke.getCaught() ? ((View) green.getParent()).getMeasuredWidth() : 0);
+					green.getLayoutParams().width = width;
+					green.getLayoutParams().height = view.getMeasuredHeight();
+					green.requestLayout();
+					//Log.i("GLOBAL","REQUEST LAYOUT");
+				}
+			});
+		}
 		
 		// Set swipe listener to animate sliding green on swipe
 		view.setOnTouchListener(new OnSwipeListener(mInflater.getContext(), view) {
@@ -326,13 +331,13 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 	private void drag(final View v, float initX, MotionEvent e, boolean caught) {
 		final int width = v.getMeasuredWidth();
 		final View green = v.findViewById(R.id.green);
-		float diffX = e.getX() - initX;
-		if (!caught && diffX > 0)
-			green.getLayoutParams().width = (int)diffX;
-		else if (caught && diffX < 0)
-			green.getLayoutParams().width = width + (int)diffX;
-		green.getLayoutParams().height = v.getMeasuredHeight();
-		green.requestLayout();
+		float diff = e.getX() - initX;
+		if (!caught && diff > 0)
+			green.getLayoutParams().width = (int)diff;
+		else if (caught && diff < 0)
+			green.getLayoutParams().width = width + (int)diff;
+        green.getLayoutParams().height = v.getMeasuredHeight();
+        green.requestLayout();
 	}
 	
 	private void finishAnim(final View v, float initX, float downTime, MotionEvent me, final Pokemon poke) {
@@ -347,7 +352,7 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 			poke.setCaught(true);
 		else if (poke.getCaught() && ((diffX < -width/3) || speed < -1))
 			poke.setCaught(false);
-		
+
 		// Set up animation listener
 		AnimationListener al = new AnimationListener() {
 			@Override
@@ -362,7 +367,7 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 			@Override
 			public void onAnimationStart(Animation arg0) {}
 		};
-		
+
 		Animation anim = new Animation() {
 			@Override
 			protected void applyTransformation(float time, Transformation t) {
@@ -379,7 +384,7 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 				return true;
 			}
 		};
-		
+
 		if (al!=null) {
 			anim.setAnimationListener(al);
 		}
@@ -400,9 +405,6 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 		String query = "SELECT _id, caught FROM pokedex";
 		Cursor c = db.rawQuery(query,null);
 		c.moveToFirst();
-		for(Pokemon poke:pokedex) {
-			//Log.i("UPDATE",poke.getName());
-		}
 		if (!c.isAfterLast()) {
 			do {
 				pokedex.get(c.getInt(0)-1).setCaught(c.getInt(1));

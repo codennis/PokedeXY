@@ -49,9 +49,6 @@ public class MainActivity extends Activity implements TabListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-		Log.i("ON","CREATE");
-		DBHelper dbh = DBHelper.getInstance(this);
-		db = dbh.getDb();
 		// Initialize action bar tabs
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -61,6 +58,8 @@ public class MainActivity extends Activity implements TabListener {
 		actionBar.addTab(actionBar.newTab().setText("Mountain").setTabListener(this));
 		actionBar.addTab(actionBar.newTab().setText("Safari").setTabListener(this));
 		
+		DBHelper dbh = DBHelper.getInstance(this);
+		db = dbh.getDb();
 		pokedexList = (ListView) findViewById(R.id.nationalDex);
 		initializePokedex();
 		// Set up filtering checkbox to update listview.
@@ -106,7 +105,6 @@ public class MainActivity extends Activity implements TabListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.i("ON","RESUME");
 		if (adapter != null) {
 			adapter.updatePokedex();
 			search.clearFocus();
@@ -131,18 +129,16 @@ public class MainActivity extends Activity implements TabListener {
 	 */
 	private void initializePokedex() {
 		String query = "SELECT _id, kalos, k_id, name, caught, evo_series, evo_lvl, evo_how, depth FROM pokedex";
-		Log.i("CURSOR", "query");
 		Cursor c = db.rawQuery(query,null);
 		c.moveToFirst();
 		pokedex.clear();
-		Log.i("WTF",pokedex.size()+"");
 		if (!c.isAfterLast()) {
 			do {
 				pokedex.add(new Pokemon(c.getInt(0),c.getInt(1),c.getInt(2),c.getString(3),
 						c.getInt(4),c.getString(5),c.getInt(6),c.getString(7),c.getInt(8)));
 			} while (c.moveToNext());
 		}
-		Log.i("UHH",pokedex.size()+"");
+		
 		query = "SELECT _id, safari, slot FROM safari NATURAL JOIN pokedex";
 		c = db.rawQuery(query, null);
 		c.moveToFirst();
@@ -160,6 +156,7 @@ public class MainActivity extends Activity implements TabListener {
 		adapter.updateHeader(findViewById(android.R.id.content));
 		pokedexList.setTextFilterEnabled(true);
 		pokedexList.setAdapter(adapter);
+		adapter.updateList();
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.codennis.pokedexy;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -9,14 +8,14 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 
 public class OnSwipeListener implements OnTouchListener {
-	
+
 	private final GestureDetector gDetector;
 	private boolean startedSwiping;
 	protected final View view;
 	protected final Context context;
 	protected float initX, initY = 0;
 	protected float downTime;
-	
+
 	/**
 	 * @param context
 	 * @param v
@@ -56,38 +55,38 @@ public class OnSwipeListener implements OnTouchListener {
 				return true;
 			}
 			/*
-			if (Math.abs(me.getY() - initY) < Math.abs(me.getX() - initX)) {
-				v.getParent().requestDisallowInterceptTouchEvent(true);
-			} else if (Math.abs(me.getX() - initX) > 200) {
-				//v.getParent().requestDisallowInterceptTouchEvent(false);
-				//if (Math.abs(me.getX() - initX) > v.getWidth()/10) {
-				//	onUp(me);
-				//}
-			}
-			*/
+                    if (Math.abs(me.getY() - initY) < Math.abs(me.getX() - initX)) {
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                    } else if (Math.abs(me.getX() - initX) > 200) {
+                            //v.getParent().requestDisallowInterceptTouchEvent(false);
+                            //if (Math.abs(me.getX() - initX) > v.getWidth()/10) {
+                            //        onUp(me);
+                            //}
+                    }
+			 */
 			onDrag(me);
 		}
 		return gDetector.onTouchEvent(me);
 	}
-    
+
 	private final class GestureListener extends SimpleOnGestureListener {
 		private static final int SWIPE_THRESHOLD = 100;
 		private static final int SWIPE_VELOCITY_THRESHOLD = 100;
-		
+
 		@Override
 		public boolean onDown(MotionEvent e) {
 			return false;
 		}
-		
+
 		@Override
-	    public boolean onSingleTapUp(MotionEvent event) {
-	    	onTap();
-	    	return false;
-	    }
+		public boolean onSingleTapUp(MotionEvent event) {
+			onTap();
+			return false;
+		}
 	}
 
 	public boolean initDown() { return true; }
 	public boolean onDrag(MotionEvent me) { return true; }
 	public boolean onUp(MotionEvent me) { return true; }
-    public boolean onTap() { return true; }
+	public boolean onTap() { return true; }
 }

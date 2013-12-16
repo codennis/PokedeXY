@@ -1,7 +1,10 @@
 package com.codennis.pokedexy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -164,5 +167,16 @@ class ViewHolder {
     
     public int getImageId() {
         return imageid;
+    }
+    
+    public int maxHeight() {
+    	int max = col1.getMeasuredHeight();
+    	if (col2.getMeasuredHeight() > max)
+    		max = col2.getMeasuredHeight();
+    	if (col3.getMeasuredHeight() > max)
+    		max = col3.getMeasuredHeight();
+    	if (col4.getMeasuredHeight() > max)
+    		max = col4.getMeasuredHeight();
+    	return max;
     }
 }
