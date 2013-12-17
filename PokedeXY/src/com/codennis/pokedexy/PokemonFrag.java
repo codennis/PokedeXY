@@ -63,9 +63,10 @@ public class PokemonFrag extends Fragment {
 		ListView evoList = (ListView) v.findViewById(R.id.evoList);
 		adapter = new PokedexAdapter(this.getActivity(), pokedex);
 		adapter.setEvo(poke.getEvoSeries());
+		adapter.setID(poke.getNID());
+		adapter.updateList();
 		evoList.setTextFilterEnabled(true);
 		evoList.setAdapter(adapter);
-		adapter.updateList();
 		
 		ImageView img = (ImageView) v.findViewById(R.id.pokeImg);
 		String imgName = "_"+poke.getNIDString();

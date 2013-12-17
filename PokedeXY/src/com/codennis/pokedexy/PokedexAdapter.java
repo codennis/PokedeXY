@@ -21,6 +21,7 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author codennis
@@ -34,7 +35,7 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 	// Filter preferences
 	private boolean hideCaught;
 	private String evoSeries;
-	private int kalos;
+	private int kalos, pokeID;
 	private String search;
 	
 	private ViewTreeObserver vto;
@@ -55,6 +56,7 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 		hideCaught = false;
 		evoSeries = null;
 		kalos = 0;
+		pokeID = 0;
 		search = null;
 	}
 
@@ -67,6 +69,7 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 		hideCaught = false;
 		evoSeries = null;
 		kalos = 0;
+		pokeID = 0;
 		this.txtCounter = txtCounter;
 		search = null;
 	}
@@ -124,6 +127,13 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 	public void setSearch(String search) {
 		this.search = search;
 		this.getFilter().filter(search);
+	}
+	
+	public int getID() {
+		return pokeID;
+	}
+	public void setID(int id) {
+		pokeID = id;
 	}
 	
 	public void updateHeader(View view) {
@@ -240,7 +250,6 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 					green.getLayoutParams().width = width;
 					green.getLayoutParams().height = view.getMeasuredHeight();
 					green.requestLayout();
-					//Log.i("GLOBAL","REQUEST LAYOUT");
 				}
 			});
 		}
@@ -268,6 +277,12 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 				
 			@Override
 			public boolean onTap() {
+				/*
+				if (pkmn.getNID() == getID()) {
+					Toast.makeText(context, poke.getName() + " is already open.",Toast.LENGTH_LONG).show();
+					return true;
+				}
+				*/
 		    	Intent i = new Intent(context, PokemonFragActivity.class);
 		    	i.putExtra("poke_id",pkmn.getNID());
 		    	context.startActivity(i);

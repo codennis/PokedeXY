@@ -3,6 +3,7 @@ package com.codennis.pokedexy;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -19,12 +20,16 @@ public class PokemonFragActivity extends FragmentActivity{
 	private FragmentPagerAdapter fpa;
 	private ViewPager vp;
 	protected List<Fragment> fragments = new ArrayList<Fragment>();
+	private int pokeID;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pokemon_frag_activity);
 
+		Intent i = this.getIntent();
+		pokeID = i.getExtras().getInt("poke_id");
+		
 		fragments.add(pokedex_entry, new PokemonFrag());
 		//fragments.add(pokedex_entry, new PokemonFrag());
 		
@@ -53,6 +58,9 @@ public class PokemonFragActivity extends FragmentActivity{
 		vp = (ViewPager) findViewById(R.id.pager);
 		vp.setAdapter(fpa);
 		//vp.setCurrentItem(pokemon);
-		
+	}
+	
+	public int getID() {
+		return pokeID;
 	}
 }
