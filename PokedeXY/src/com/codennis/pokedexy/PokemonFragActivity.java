@@ -14,7 +14,7 @@ public class PokemonFragActivity extends FragmentActivity{
 	public final static int pokemon = 1;
 	public final static int frag_three = 2;
 	
-	public static final int frag_count = 2;
+	public static final int frag_count = 1;
 	
 	private FragmentPagerAdapter fpa;
 	private ViewPager vp;
@@ -24,9 +24,9 @@ public class PokemonFragActivity extends FragmentActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pokemon_frag_activity);
-		
+
 		fragments.add(pokedex_entry, new PokemonFrag());
-		fragments.add(pokemon, new PokemonFrag());
+		//fragments.add(pokedex_entry, new PokemonFrag());
 		
 		fpa = new FragmentPagerAdapter(getSupportFragmentManager()) {
 			@Override
@@ -52,7 +52,7 @@ public class PokemonFragActivity extends FragmentActivity{
 		
 		vp = (ViewPager) findViewById(R.id.pager);
 		vp.setAdapter(fpa);
-		vp.setCurrentItem(pokemon);
+		//vp.setCurrentItem(pokemon);
 		
 	}
 }

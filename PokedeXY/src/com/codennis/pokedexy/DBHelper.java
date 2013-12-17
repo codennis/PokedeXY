@@ -53,7 +53,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	// Create database if not yet created
 	public void createDatabase() {
-		Log.i("Creating", "database");
+		//Log.i("Creating", "database");
 		boolean dbExists = checkDatabase();
 		if (!dbExists) {
 			this.getReadableDatabase();

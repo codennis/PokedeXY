@@ -32,6 +32,7 @@ public class OnSwipeListener implements OnTouchListener {
 	@Override
 	public boolean onTouch(final View v, final MotionEvent me) {
 		float diffX,diffY;
+		int width = v.getWidth();
 		if (me.getAction() == MotionEvent.ACTION_DOWN) {
 			initX = me.getX();
 			initY = me.getY();
@@ -40,18 +41,18 @@ public class OnSwipeListener implements OnTouchListener {
 			initDown();
 		}
 		if (me.getAction() == MotionEvent.ACTION_UP) {
-			onUp(me);
+			onUp(me, false);
 			return gDetector.onTouchEvent(me);
 		}
 		if (me.getAction() == MotionEvent.ACTION_MOVE) {
 			v.getParent().requestDisallowInterceptTouchEvent(true);
 			diffX = Math.abs(me.getX() - initX);
 			diffY = Math.abs(me.getY() - initY);
-			if (!startedSwiping && diffX > 200)
+			if (!startedSwiping && diffX > width/5)
 				startedSwiping = true;
-			if (diffX < 200 && diffY > 100 && !startedSwiping) {
+			if (diffX < width/5 && diffY > width/10 && !startedSwiping) {
 				v.getParent().requestDisallowInterceptTouchEvent(false);
-				onUp(me);
+				onUp(me, true);
 				return true;
 			}
 			/*
@@ -87,6 +88,6 @@ public class OnSwipeListener implements OnTouchListener {
 
 	public boolean initDown() { return true; }
 	public boolean onDrag(MotionEvent me) { return true; }
-	public boolean onUp(MotionEvent me) { return true; }
+	public boolean onUp(MotionEvent me, boolean cancel) { return true; }
 	public boolean onTap() { return true; }
 }

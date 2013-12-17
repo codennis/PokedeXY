@@ -223,12 +223,11 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 
 		// Global layout listener to keep rows correct colors
 		final View green = view.findViewById(R.id.green);
-		/*
+		
 		int width = poke.getCaught() ? view.getWidth() : 0;
 		green.getLayoutParams().width = width;
 		green.getLayoutParams().height = view.getHeight();
-		green.requestLayout();
-		*/
+		//green.requestLayout();
 		
 		vto = view.getViewTreeObserver();
 		if (vto.isAlive()) {
@@ -262,8 +261,8 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 			}
 			
 			@Override
-			public boolean onUp(MotionEvent me) {
-				finishAnim(view, initX, downTime, me, pkmn);
+			public boolean onUp(MotionEvent me, boolean cancel) {
+				finishAnim(view, initX, downTime, me, pkmn, cancel);
 				return true;
 			}
 				
@@ -340,7 +339,7 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
         green.requestLayout();
 	}
 	
-	private void finishAnim(final View v, float initX, float downTime, MotionEvent me, final Pokemon poke) {
+	private void finishAnim(final View v, float initX, float downTime, MotionEvent me, final Pokemon poke, boolean cancel) {
 		final int width = v.getMeasuredWidth();
 		final View green = v.findViewById(R.id.green);
 		final int greenWidth = green.getLayoutParams().width;
@@ -348,9 +347,9 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 		long time = (long) (me.getEventTime() - downTime);
 		final float speed = diffX/time;
 
-		if (!poke.getCaught() && ((diffX > width/3) || speed > 1))
+		if (!poke.getCaught() && ((diffX > width/2) || speed > 1) && !cancel)
 			poke.setCaught(true);
-		else if (poke.getCaught() && ((diffX < -width/3) || speed < -1))
+		else if (poke.getCaught() && ((diffX < -width/2) || speed < -1) && !cancel)
 			poke.setCaught(false);
 
 		// Set up animation listener
@@ -388,8 +387,8 @@ public class PokedexAdapter extends BaseAdapter implements Filterable {
 		if (al!=null) {
 			anim.setAnimationListener(al);
 		}
-		if (time > 700)
-			time = 700;
+		if (time > 500)
+			time = 500;
 		else if (time < 100)
 			time = 100;
 		anim.setDuration(time);
